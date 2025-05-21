@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
+    
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application>
+        <activity
+            android:name=".ui.feature.detail.ActivateDetailActivity"
+            android:exported="false"
+            android:label="@string/title_activity_activate_detail"
+            android:theme="@style/Theme.SSAMNA"
+            />
+        <activity
+            android:name=".ui.feature.crew.GoalActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SSAMNA"
+            />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBVYAAer_wj4JsMkRvVy5G3VmSAkUzqYV8"
+            />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3025693686135055~7858944146"/>
+
+        <activity
+            android:name=".ui.main.home.HomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SSAMNA"
+            />
+        <activity
+            android:name=".ui.main.SSAMNA"
+            android:exported="false"
+            android:theme="@style/Theme.SSAMNA"
+            />
+    </application>
+
+</manifest>

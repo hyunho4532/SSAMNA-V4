@@ -1,0 +1,38 @@
+[
+  {
+    "index": "1",
+    "name": "오늘은! 러닝",
+    "description": "러닝을 진행합니다.",
+    "assets": "R.drawable.baseline_persons_run_24"
+  },
+  {
+    "index": "2",
+    "name": "오늘은! 걷기",
+    "description": "걷기를 진행합니다.",
+    "assets": "R.drawable.baseline_persons_run_24"
+  },
+  {
+    "index": "3",
+    "name": "오늘은! 출근",
+    "description": "출근하면서 러닝을 진행합니다.",
+    "assets": "R.drawable.baseline_go_work_24"
+  },
+  {
+    "index": "4",
+    "name": "오늘은! 퇴근",
+    "description": "퇴근하면서 러닝을 진행합니다",
+    "assets": "R.drawable.baseline_out_work_24"
+  },
+  {
+    "index": "5",
+    "name": "밥 먹고! 러닝",
+    "description": "밥 먹고 30분 후에 러닝을 진행합니다.",
+    "assets": "R.drawable.baseline_food_24"
+  },
+  {
+    "index": "6",
+    "name": "밥 먹기 전! 러닝",
+    "description": "밥 먹기 전에 30분 러닝을 진행합니다.",
+    "assets": "R.drawable.baseline_food_24"
+  }
+]

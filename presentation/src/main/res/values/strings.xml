@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_icon">땀나!</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_on_boarding">OnBoardingActivity</string>
+    <string name="title_activity_login_screen">LoginScreen</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="hint_recent_exercise">ex) 스쿼트, 팔굽혀펴기</string>
+    <string name="hint_name_exercise">ex) 행복한 운동 생활!</string>
+
+    <string name="hint_exercise_week">3</string>
+
+    <string name="hint_exercise_time">120: 2시간</string>
+
+    <string name="nav_home">홈</string>
+    <string name="nav_analyze">분석</string>
+    <string name="nav_profile">프로필</string>
+    <string name="title_activity_goal">GoalActivity</string>
+    <string name="title_activity_activate_detail">ActivateDetailActivity</string>
+</resources>

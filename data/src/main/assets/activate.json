@@ -1,0 +1,44 @@
+[
+  {
+    "index": "1",
+    "name": "달리기",
+    "description": "달리기를 진행합니다!",
+    "assets": "R.drawable.baseline_persons_run_24"
+  },
+  {
+    "index": "2",
+    "name": "걷기",
+    "description": "걷기를 진행합니다!",
+    "assets": "R.drawable.baseline_persons_walk_24"
+  },
+  {
+    "index": "3",
+    "name": "가족과 함께 달리기",
+    "description": "가족들과 함께 달리면서 좋은 여정을 쌓으세요!",
+    "assets": "R.drawable.baseline_persons_run_24"
+  },
+  {
+    "index": "4",
+    "name": "가족과 함께 걷기",
+    "description": "가족들과 함께 걸으면서 대화를 즐겨보세요!",
+    "assets": "R.drawable.baseline_diversity_3_24"
+  },
+  {
+  "index": "5",
+  "name": "애완견과 산책",
+  "description": "애완견과 즐거운 산책을 하면서 걸어보세요!",
+  "assets": "R.drawable.baseline_face_24"
+  },
+  {
+    "index": "6",
+    "name": "자전거",
+    "description": "자전거를 타면서 심폐 지구력을 향상시키세요!",
+    "assets": "R.drawable.baseline_cycle_24"
+  },
+  {
+    "index": "7",
+    "name": "러킹",
+    "description": "걷기 운동보다 더 높은 운동 효과를 보여줍니다!",
+    "assets": "R.drawable.baseline_persons_run_24"
+  }
+]
