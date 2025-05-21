@@ -13,11 +13,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,6 +55,11 @@ fun SettingScreen(
     stateViewModel: StateViewModel,
     ttsViewModel: TTSViewModel = hiltViewModel()
 ) {
+    val genderOptions = listOf("남자", "여자")
+    val (selectedOption, onOptionSelected) = remember {
+        mutableStateOf(genderOptions[0])
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -104,61 +115,29 @@ fun SettingScreen(
         ) {
             Column(
                 modifier = Modifier
-                    .padding(top = 6.dp, start = 6.dp)
+                    .padding(horizontal = 16.dp)
+                    .selectableGroup()
             ) {
-                Text(
-                    text = "TTS 목소리를 선택해주세요!",
-                    fontWeight = FontWeight.Bold
-                )
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceAround
+                        .padding(vertical = 8.dp)
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "남자",
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Image(
+                    genderOptions.forEach { text ->
+                        Box(
                             modifier = Modifier
-                                .size(120.dp)
-                                .clickable {
-                                    ttsViewModel.speak(
-                                        "안녕하세요! 저와 함께해요!",
-                                        VoiceType.MALE
-                                    )
-                                },
-                            painter = painterResource(R.drawable.tts_man),
-                            contentDescription = "남자 TTS 캐릭터"
-                        )
-                    }
-
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "여자",
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Image(
-                            modifier = Modifier
-                                .size(120.dp)
-                                .clickable {
-                                    ttsViewModel.speak(
-                                        "안녕하세요! 저와 함께해요!",
-                                        VoiceType.FEMALE
-                                    )
-                                },
-                            painter = painterResource(R.drawable.tts_human),
-                            contentDescription = "여자 TTS 캐릭터"
-                        )
+                                .width(200.dp)
+                                .selectable(
+                                    selected = (text == selectedOption),
+                                    onClick = { onOptionSelected(text) }
+                                )
+                                .padding(vertical = 8.dp),
+                        ) {
+                            RadioButton(
+                                selected = (text == selectedOption),
+                                onClick = null
+                            )
+                        }
                     }
                 }
             }
@@ -178,6 +157,5 @@ fun SettingScreen(
             shape = "Rectangle",
             stateViewModel = stateViewModel
         )
-
     }
 }
