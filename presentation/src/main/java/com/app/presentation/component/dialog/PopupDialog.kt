@@ -2,6 +2,7 @@ package com.app.presentation.component.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -369,7 +370,10 @@ fun PermissionDialog(
             modifier = Modifier
                 .width(420.dp)
                 .height(420.dp),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White
+            )
         ) {
             Column (
                 modifier = Modifier
@@ -577,7 +581,10 @@ fun PrivacyConsentDialog(
             modifier = Modifier
                 .width(420.dp)
                 .height(420.dp),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White
+            )
         ) {
             Column(
                 modifier = Modifier

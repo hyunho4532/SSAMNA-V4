@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.app.domain.model.dto.CrewDTO
 import com.app.domain.model.location.Coordinate
+import com.app.domain.model.state.Voice
 import com.app.domain.model.user.User
 import com.app.presentation.animation.Screens
 import com.app.presentation.ui.feature.login.LoginScreen
@@ -70,9 +71,12 @@ fun AppNavHost() {
         }
 
         composable(
-            route = "report?userState={userState}",
+            route = "report?userState={userState}&voiceState={voiceState}",
             arguments = listOf(
                 navArgument("userState") {
+                    type = NavType.StringType
+                },
+                navArgument("voiceState") {
                     type = NavType.StringType
                 }
             )
@@ -80,7 +84,10 @@ fun AppNavHost() {
             val userStateJson = backStackEntry.arguments?.getString("userState")
             val userState = Json.decodeFromString<User>(userStateJson!!)
 
-            ReportScreen(userState)
+            val voiceStateJson = backStackEntry.arguments?.getString("voiceState")
+            val voiceState = Json.decodeFromString<Voice>(voiceStateJson!!)
+
+            ReportScreen(userState, voiceState)
         }
     }
 }
@@ -211,7 +218,8 @@ fun ScreenNavigationConfiguration(
 
         composable("report") {
             ReportScreen(
-                userState = User()
+                userState = User(),
+                voiceState = Voice()
             )
         }
     }

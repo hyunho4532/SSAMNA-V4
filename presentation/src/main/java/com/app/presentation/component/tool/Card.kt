@@ -86,6 +86,10 @@ fun CustomCard(width: Dp, height: Dp, text: String, id: Int) {
             .shadow(
                 elevation = 3.dp
             ),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        border = BorderStroke(1.dp, Color.Gray)
     ) {
         Box(
             modifier = Modifier

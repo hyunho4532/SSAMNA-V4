@@ -1,5 +1,6 @@
 package com.app.presentation.ui.feature
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -151,7 +152,11 @@ fun OnBoardingScreen(
                                 .align(Alignment.CenterVertically)
                                 .clickable {
                                     isPermissionPopup.value = true
-                                }
+                                },
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White
+                            ),
+                            border = BorderStroke(1.dp, Color.Gray)
                         ) {
                             Row(
                                 modifier = Modifier.fillMaxSize(),
@@ -210,7 +215,11 @@ fun OnBoardingScreen(
                                 .align(Alignment.CenterVertically)
                                 .clickable {
                                     isPrivacyPopup.value = true
-                                }
+                                },
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White
+                            ),
+                            border = BorderStroke(1.dp, Color.Gray)
                         ) {
                             Row(
                                 modifier = Modifier.fillMaxSize(),

@@ -1,6 +1,7 @@
 package com.app.presentation.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.domain.model.enum.VoiceType
@@ -43,6 +44,8 @@ class TTSViewModel @Inject constructor(
                     name = it.name
                 )
             }
+
+            Log.d("TTSViewModel", _voice.value.toString())
         }
     }
 
