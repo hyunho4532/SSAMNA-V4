@@ -35,6 +35,10 @@ sealed class ButtonType {
         data object FINISH: MarkerStatus()
     }
 
+    sealed class VoiceStatus: ButtonType() {
+        data object INSERT: VoiceStatus()
+    }
+
     sealed class CrewStatus: ButtonType() {
         data object INSERT: CrewStatus()
         data object Delete: CrewStatus()

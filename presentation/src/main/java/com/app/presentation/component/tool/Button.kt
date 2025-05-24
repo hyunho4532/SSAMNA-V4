@@ -38,6 +38,7 @@ import com.app.domain.model.enum.ButtonType
 import com.app.domain.model.enum.VoiceType
 import com.app.domain.model.state.ChallengeMaster
 import com.app.domain.model.state.CrewMaster
+import com.app.domain.model.state.Voice
 import com.app.presentation.ui.main.home.HomeActivity
 import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.ChallengeViewModel
@@ -220,11 +221,16 @@ fun CustomButton(
                             }
                         }
 
+                        ButtonType.VoiceStatus.INSERT -> {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                ttsViewModel.insert(data as Voice)
+                            }
+                        }
+
                         else -> {
                             locationManagerViewModel.startService()
                             sensorManagerViewModel.startService(true)
                             sensorManagerViewModel.startWatch()
-                            ttsViewModel.speak("운동을 시작합니다! 활동 종류는 ${activates.value.activateName}, 활동 형태는 ${activatesForm.value.name}입니다!", VoiceType.FEMALE)
                         }
                     }
                 }

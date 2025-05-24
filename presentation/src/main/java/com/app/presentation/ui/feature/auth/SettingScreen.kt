@@ -1,5 +1,6 @@
 package com.app.presentation.ui.feature.auth
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -22,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -59,6 +61,8 @@ fun SettingScreen(
     val (selectedOption, onOptionSelected) = remember {
         mutableStateOf(genderOptions[0])
     }
+
+    val voice = ttsViewModel.voice.collectAsState()
 
     Column(
         modifier = Modifier
@@ -110,7 +114,7 @@ fun SettingScreen(
         Card(
             modifier = Modifier
                 .width(setUpWidth())
-                .height(200.dp),
+                .height(180.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         ) {
             Column(
@@ -121,15 +125,27 @@ fun SettingScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp)
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     genderOptions.forEach { text ->
                         Box(
                             modifier = Modifier
-                                .width(200.dp)
+                                .height(120.dp)
                                 .selectable(
                                     selected = (text == selectedOption),
-                                    onClick = { onOptionSelected(text) }
+                                    onClick = {
+                                        val voiceType = when(text) {
+                                            "남자" -> VoiceType.MALE
+                                            else -> VoiceType.FEMALE
+                                        }
+
+                                        onOptionSelected(text)
+                                        ttsViewModel.speak(
+                                            text = "안녕하세요! 저와 함께해요!",
+                                            type = voiceType
+                                        )
+                                    }
                                 )
                                 .padding(vertical = 8.dp),
                         ) {
@@ -137,9 +153,44 @@ fun SettingScreen(
                                 selected = (text == selectedOption),
                                 onClick = null
                             )
+
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = text,
+                                    fontWeight = FontWeight.Bold
+                                )
+
+                                if (text == "남자") {
+                                    Image(
+                                        modifier = Modifier
+                                            .size(120.dp),
+                                        painter = painterResource(R.drawable.tts_man),
+                                        contentDescription = "남자 TTS 캐릭터"
+                                    )
+                                } else {
+                                    Image(
+                                        modifier = Modifier
+                                            .size(120.dp),
+                                        painter = painterResource(R.drawable.tts_human),
+                                        contentDescription = "여자 TTS 캐릭터"
+                                    )
+                                }
+                            }
                         }
                     }
                 }
+
+                CustomButton(
+                    type = ButtonType.VoiceStatus.INSERT,
+                    width = setUpWidth(),
+                    height = 38.dp,
+                    text = "목소리 등록하기 (땀나와 함께!)",
+                    shape = "Rectangle",
+                    data = voice.value,
+                    stateViewModel = stateViewModel
+                )
             }
         }
 
@@ -155,6 +206,7 @@ fun SettingScreen(
             text = "다크 모드 활성화",
             showIcon = true,
             shape = "Rectangle",
+            data = voice,
             stateViewModel = stateViewModel
         )
     }

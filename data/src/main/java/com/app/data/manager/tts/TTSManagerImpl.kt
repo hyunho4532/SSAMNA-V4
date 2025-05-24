@@ -28,7 +28,7 @@ class TTSManagerImpl @Inject constructor(
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    override fun speak(text: String, type: VoiceType) {
+    override fun speak(text: String, type: VoiceType, setVoice: (com.app.domain.model.state.Voice) -> Unit) {
         val voice: Voice = when (type) {
             VoiceType.MALE -> {
                 Voice(languageCode = "ko-KR", name = "ko-KR-Chirp3-HD-Charon")
@@ -38,6 +38,11 @@ class TTSManagerImpl @Inject constructor(
                 Voice(languageCode = "ko-KR", name = "ko-KR-Chirp3-HD-Aoede")
             }
         }
+
+        setVoice(com.app.domain.model.state.Voice(
+            languageCode = voice.languageCode,
+            name = voice.name
+        ))
 
         val service = retrofit.create(TTSService::class.java)
 
