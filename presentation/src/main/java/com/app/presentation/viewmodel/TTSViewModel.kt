@@ -63,14 +63,14 @@ class TTSViewModel @Inject constructor(
              * 내가 등록한 사운드가 존재하는 지 확인한다.
              */
             val voiceList = ttsCase.isExists(userId)
-            val voice: Voice = voiceList.first()
+            val voice: Voice? = voiceList.firstOrNull()
 
             /**
              * 가져온 사운드의 상태가 비어 있지 않다면 해당 보이스로 말하기
              * 비어있다면 보이스(Default) 말하기
              */
             if (voiceList.isNotEmpty()) {
-                ttsCase.speak(text, voice)
+                ttsCase.speak(text, voice!!)
             } else {
                 ttsCase.speak(text, Voice(
                     name = "ko-KR-Chirp3-HD-Charon",

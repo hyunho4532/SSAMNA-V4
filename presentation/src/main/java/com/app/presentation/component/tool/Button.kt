@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -28,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.app.domain.model.calcul.FormatImpl
 import com.app.domain.model.dto.ActivateDTO
 import com.app.domain.model.dto.ChallengeDTO
 import com.app.domain.model.location.Coordinate
@@ -53,6 +55,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CustomButton(
     type: ButtonType,
@@ -135,16 +138,16 @@ fun CustomButton(
                     when (type) {
                         ButtonType.RunningStatus.FINISH -> {
                             if (sensorManagerViewModel.getSavedSensorState() < 100) {
+                                ttsViewModel.speak(
+                                    "운동이 종료되었습니다. 통계: ${sensorManagerViewModel.getSavedSensorState()}보, ${FormatImpl("YY:MM:DD:H").getSpeakTime(activates.value.time)} 입니다."
+                                )
+
                                 sensorManagerViewModel.stopService(
                                     runningStatus = true,
                                     isRunning = false
                                 )
                                 locationManagerViewModel.stopService()
                                 sensorManagerViewModel.stopWatch()
-
-                                ttsViewModel.speak(
-                                    "운동이 종료되었습니다. 수고하셨습니다!"
-                                )
 
                             } else {
                                 Toast.makeText(context, "최소 100보 이상은 걸어야 합니다!", Toast.LENGTH_SHORT).show()

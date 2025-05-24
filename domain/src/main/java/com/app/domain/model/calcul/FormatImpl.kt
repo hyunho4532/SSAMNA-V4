@@ -58,4 +58,12 @@ data class FormatImpl(
 
         return String.format("%02d:%02d", minutes, seconds)
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun getSpeakTime(time: Long): String {
+        val minutes = time / 60
+        val seconds = time % 60
+
+        return "${minutes}분 ${seconds}초"
+    }
 }
