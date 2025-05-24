@@ -1,6 +1,7 @@
 package com.app.data.repository.tts
 
 import com.app.data.manager.tts.TTSManager
+import com.app.domain.model.dto.CrewDTO
 import com.app.domain.model.enum.VoiceType
 import com.app.domain.model.state.Voice
 import com.app.domain.repository.tts.TTSRepository
@@ -22,9 +23,17 @@ class TTSRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun speak(text: String, voice: Voice) {
+        ttsManager.speak(text, voice)
+    }
+
     override suspend fun isExists(userId: String): List<Voice> {
         return withContext(Dispatchers.IO) {
-            
+            postgrest.from("Voice").select {
+                filter {
+                    eq("user_id ", userId)
+                }
+            }.decodeList<Voice>()
         }
     }
 

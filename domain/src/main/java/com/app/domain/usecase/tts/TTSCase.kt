@@ -15,10 +15,14 @@ class TTSCase @Inject constructor(
     }
 
     suspend fun isExists(userId: String): List<Voice> {
-
+        return ttsRepository.isExists(userId)
     }
 
     suspend fun insert(voice: Voice) {
         ttsRepository.insert(voice)
+    }
+
+    fun speak(text: String, voice: Voice) {
+        ttsRepository.speak(text, voice)
     }
 }

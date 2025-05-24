@@ -141,6 +141,11 @@ fun CustomButton(
                                 )
                                 locationManagerViewModel.stopService()
                                 sensorManagerViewModel.stopWatch()
+
+                                ttsViewModel.speak(
+                                    "운동이 종료되었습니다. 수고하셨습니다!"
+                                )
+
                             } else {
                                 Toast.makeText(context, "최소 100보 이상은 걸어야 합니다!", Toast.LENGTH_SHORT).show()
                             }
@@ -229,6 +234,10 @@ fun CustomButton(
                             locationManagerViewModel.startService()
                             sensorManagerViewModel.startService(true)
                             sensorManagerViewModel.startWatch()
+
+                            ttsViewModel.speak(
+                                "운동을 시작합니다!"
+                            )
                         }
                     }
                 }
