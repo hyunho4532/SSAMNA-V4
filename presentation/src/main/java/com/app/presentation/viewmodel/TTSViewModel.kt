@@ -1,7 +1,6 @@
 package com.app.presentation.viewmodel
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.domain.model.enum.VoiceType
@@ -33,10 +32,10 @@ class TTSViewModel @Inject constructor(
 
     val voice: StateFlow<Voice> = _voice
 
-    fun speak(text: String, type: VoiceType) {
+    fun preview(text: String, type: VoiceType) {
         val userId = sharedPreferences.getString("id", "").toString()
 
-        ttsCase.speak(text, type) {
+        ttsCase.preview(text, type) {
             _voice.update { voice ->
                 voice.copy(
                     userId = userId,
@@ -50,6 +49,17 @@ class TTSViewModel @Inject constructor(
     fun insert(voice: Voice) {
         viewModelScope.launch {
             ttsCase.insert(voice)
+        }
+    }
+
+    fun speak(text: String) {
+        val userId = sharedPreferences.getString("id", "").toString()
+
+        /**
+         * Voice 테이블에 내가 등록한 사운드가 존재하는지 확인
+         */
+        viewModelScope.launch {
+            val isExists = ttsCase.isExists(userId)
         }
     }
 }

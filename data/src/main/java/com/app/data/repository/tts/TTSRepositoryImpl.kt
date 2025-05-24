@@ -16,9 +16,15 @@ class TTSRepositoryImpl @Inject constructor(
     private val ttsManager: TTSManager,
     private val postgrest: Postgrest
 ) : TTSRepository {
-    override fun speak(text: String, type: VoiceType, setVoice: (Voice) -> Unit) {
-        ttsManager.speak(text, type) {
+    override fun preview(text: String, type: VoiceType, setVoice: (Voice) -> Unit) {
+        ttsManager.preview(text, type) {
             setVoice(it)
+        }
+    }
+
+    override suspend fun isExists(userId: String): List<Voice> {
+        return withContext(Dispatchers.IO) {
+            
         }
     }
 

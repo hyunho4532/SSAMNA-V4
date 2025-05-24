@@ -4,6 +4,7 @@ import com.app.domain.model.enum.VoiceType
 import com.app.domain.model.state.Voice
 
 interface TTSRepository {
-    fun speak(text: String, type: VoiceType, setVoice: (Voice) -> Unit)
+    fun preview(text: String, type: VoiceType, setVoice: (Voice) -> Unit)
+    suspend fun isExists(userId: String) : List<Voice>
     suspend fun insert(voice: Voice)
 }

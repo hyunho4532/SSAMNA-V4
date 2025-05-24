@@ -141,7 +141,7 @@ fun SettingScreen(
                                         }
 
                                         onOptionSelected(text)
-                                        ttsViewModel.speak(
+                                        ttsViewModel.preview(
                                             text = "안녕하세요! 저와 함께해요!",
                                             type = voiceType
                                         )
