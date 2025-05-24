@@ -13,4 +13,8 @@ class TTSCase @Inject constructor(
             setVoice(it)
         }
     }
+
+    suspend fun insert(voice: Voice) {
+        ttsRepository.insert(voice)
+    }
 }

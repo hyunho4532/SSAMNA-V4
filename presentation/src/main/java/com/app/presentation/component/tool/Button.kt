@@ -79,10 +79,8 @@ fun CustomButton(
     ttsViewModel: TTSViewModel = hiltViewModel()
 ) {
     val activates = activityLocationViewModel.activates.collectAsState()
-    val activatesForm = activityLocationViewModel.activatesForm.collectAsState()
 
     val crew = crewViewModel.crew.collectAsState()
-
 
     val googleId = userViewModel.getSavedLoginState()
     val username = userViewModel.getSavedLoginName()
