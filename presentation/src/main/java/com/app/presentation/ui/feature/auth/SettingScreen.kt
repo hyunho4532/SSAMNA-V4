@@ -97,74 +97,6 @@ fun SettingScreen(
             color = MaterialTheme.colorScheme.onSurface
         )
 
-        Spacer(width = 0.dp, height = 30.dp)
-
-        Card(
-            modifier = Modifier
-                .width(setUpWidth())
-                .height(48.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(start = 6.dp),
-                    text = "로그아웃",
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Image(
-                    modifier = Modifier
-                        .size(28.dp),
-                    painter = painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
-                    contentDescription = "활동 아이콘",
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
-                )
-            }
-        }
-
-        Spacer(
-            width = 0.dp,
-            height = 30.dp
-        )
-
-        Card(
-            modifier = Modifier
-                .width(setUpWidth())
-                .height(48.dp)
-                .clickable {
-                    isInfoUser.value = true
-                },
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(start = 6.dp),
-                    text = "내 정보 수정",
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Image(
-                    modifier = Modifier
-                        .size(28.dp),
-                    painter = painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
-                    contentDescription = "활동 아이콘",
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
-                )
-            }
-        }
-
         Spacer(
             width = 0.dp,
             height = 30.dp
@@ -349,6 +281,38 @@ fun SettingScreen(
             width = 0.dp,
             height = 30.dp
         )
+
+        Card(
+            modifier = Modifier
+                .width(setUpWidth())
+                .height(48.dp)
+                .clickable {
+                    stateViewModel.toggleTheme()
+                },
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 6.dp),
+                    text = "계정 탈퇴",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Red
+                )
+
+                Image(
+                    modifier = Modifier
+                        .size(28.dp),
+                    painter = painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
+                    contentDescription = "활동 아이콘",
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                )
+            }
+        }
     }
 
     if (isInfoUser.value) {

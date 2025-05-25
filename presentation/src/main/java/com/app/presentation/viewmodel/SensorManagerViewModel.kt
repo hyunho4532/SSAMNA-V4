@@ -2,11 +2,16 @@ package com.app.presentation.viewmodel
 
 import android.content.Context
 import android.hardware.SensorEventListener
+import android.os.Build
 import android.util.Log
+import android.view.Display.Mode
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.domain.model.calcul.FormatImpl
 import com.app.domain.model.state.Activate
 import com.app.domain.usecase.sensor.SensorManagerCase
+import com.app.domain.usecase.tts.TTSCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
@@ -20,9 +25,11 @@ import javax.inject.Inject
 @HiltViewModel
 class SensorManagerViewModel @Inject constructor(
     private val sensorManagerCase: SensorManagerCase,
+    private val ttsCase: TTSCase,
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {
 
+    private var userShared = appContext.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
     private var sharedPreferences = appContext.getSharedPreferences("sensor_prefs", Context.MODE_PRIVATE)
 
     // StateFlow로 상태 관리
@@ -110,19 +117,35 @@ class SensorManagerViewModel @Inject constructor(
     }
 
     // 타이머 시작
+    @RequiresApi(Build.VERSION_CODES.O)
     fun startWatch() {
         /**
          * 타이머를 시작하기 전, 현재 사용자의 Voice time 값을 가져온다.
          */
+        val id = userShared.getString("id", "")
+        val pedometerCount = sharedPreferences.getInt("pedometerCount", 0)
 
-        if (stopwatchJob == null) {
-            stopwatchJob = viewModelScope.launch {
-                while (true) {
-                    delay(1000L)
-                    _activates.update {
-                        val newTime = it.time + 1
-                        sharedPreferences.edit().putLong("time", newTime).apply()
-                        it.copy(time = newTime)
+        viewModelScope.launch {
+            val voiceList = ttsCase.isExists(userId = id!!)
+            val voice = voiceList.firstOrNull()
+
+            if (stopwatchJob == null) {
+                stopwatchJob = viewModelScope.launch {
+                    while (true) {
+                        delay(1000L)
+                        _activates.update {
+                            val newTime = it.time + 1
+                            sharedPreferences.edit().putLong("time", newTime).apply()
+
+                            if (newTime % voice!!.time == 0L) {
+                                ttsCase.speak(
+                                    text = "현재 걸음 수: $pedometerCount, 시간은 ${FormatImpl("YY:MM:DD:H").getSpeakTime(newTime)} 입니다.",
+                                    voice = voice
+                                )
+                            }
+
+                            it.copy(time = newTime)
+                        }
                     }
                 }
             }

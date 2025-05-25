@@ -824,3 +824,37 @@ fun ShowChallengeDetailDialog(
         }
     }
 }
+
+/**
+ * 계정 탈퇴 팝업 여부
+ */
+@Composable
+fun ShowAccountDeleteDialog(
+    isAccountDelete: MutableState<Boolean>,
+) {
+    Dialog(
+        onDismissRequest = {
+            isAccountDelete.value = false
+        }
+    ) {
+        Card(
+            modifier = Modifier
+                .width(420.dp)
+                .height(200.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White
+            )
+        ) {
+            Column (
+                modifier = Modifier
+                    .padding(
+                        top = 14.dp,
+                        start = 8.dp
+                    )
+            ) {
+
+            }
+        }
+    }
+}
