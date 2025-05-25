@@ -11,3 +11,10 @@ class DefaultSwitch {
     val focusedIndicatorColor = Color(0xFFADC6F8)
     val focusedContainerColor = Color.White
 }
+
+/**
+ * 땀나의 기본 상수
+ */
+class Const {
+    val pages = listOf("나이", "운동", "목소리", "걷기", "목표 기간", "스마트 워치")
+}

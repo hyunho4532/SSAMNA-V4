@@ -39,6 +39,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,14 +63,21 @@ import com.app.presentation.R
 import com.app.presentation.component.row.RadioRow
 import com.app.presentation.component.tool.CustomButton
 import com.app.presentation.component.tool.Spacer
+import com.app.presentation.component.util.Const
 import com.app.presentation.component.util.responsive.setFontSize
 import com.app.presentation.component.util.getDPI
 import com.app.presentation.component.util.responsive.setUpWidth
+import com.app.presentation.ui.feature.login.info.AgeInfo
 import com.app.presentation.viewmodel.TTSViewModel
 import com.app.presentation.viewmodel.UserViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.HorizontalPagerIndicator
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+@OptIn(ExperimentalPagerApi::class)
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun UserInfoScreen(
@@ -79,6 +87,12 @@ fun UserInfoScreen(
     context: Context,
     ttsViewModel: TTSViewModel = hiltViewModel()
 ) {
+
+    /**
+     * Pager 기능을 구현하기 위해 아래 변수를 선언
+     */
+    val pagerState = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
 
     val genderOptions = listOf("남자", "여자")
 
@@ -130,405 +144,27 @@ fun UserInfoScreen(
         enableWalkingTextField.value = userState.value.recentWalkingCheck == "네"
     }
 
-    CompositionLocalProvider(
-        LocalDensity provides Density(
-            density = LocalDensity.current.density,
-            fontScale = 1f
-        )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        BoxWithConstraints(
+        HorizontalPager(
+            count = Const().pages.size,
+            state = pagerState,
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = {
-                        focusManager.clearFocus()
-                    })
-                }
-
-        ) {
-            val fontSize = setFontSize(densityDpi)
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp)
-                ) {
-                    Text(
-                        text = "회원님의 정보가 필요해요!",
-                        modifier = Modifier.padding(top = 16.dp, start = 16.dp),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Text(
-                        text = "정보에 맞게 운동 정보를 제공해드립니다!",
-                        modifier = Modifier.padding(top = 48.dp, start = 16.dp),
-                        fontSize = 16.sp
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
-                ) {
-                    Row {
-                        Text(
-                            text = "1. 나이를 선택해주세요!",
-                            modifier = Modifier.padding(top = 36.dp, start = 16.dp),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = fontSize
-                        )
-
-                        Text(
-                            text = "회원님의 나이: ${userState.value.age.toInt()}살",
-                            modifier = Modifier.padding(top = 36.dp, start = 12.dp),
-                            fontSize = fontSize
-                        )
-                    }
-
-                    Slider(
-                        modifier = Modifier
-                            .width(setUpWidth())
-                            .padding(top = 52.dp, start = 16.dp),
-                        value = userState.value.age,
-                        onValueChange = {
-                            userViewModel.saveAge(it)
-                        },
-                        colors = SliderDefaults.colors(
-                            thumbColor = Color(0xFF42B4F5),
-                            activeTrackColor = Color(0xFF156ffa),
-                            inactiveTrackColor = Color(0xFF5898fa)
-                        ),
-                        steps = 99,
-                        valueRange = 0f..100f
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
-                        .padding(top = 24.dp)
-                ) {
-                    Row {
-                        Text(
-                            text = "2. 최근 운동을 하신 적이 있으신가요?",
-                            modifier = Modifier.padding(start = 16.dp),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = fontSize
-                        )
-                    }
-
-                    RadioRow(
-                        yesORNo = yesORNo,
-                        id = 0,
-                        selectedOption = selectedOption,
-                        onOptionSelected = setSelectedOption,
-                        userState = userState
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(130.dp)
-                        .padding(top = 24.dp)
-                ) {
-                    Text(
-                        text = "2-1. 최근 운동을 진행하셨다면 어떤 운동을 하셨나요?",
-                        modifier = Modifier.padding(start = 16.dp),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = fontSize
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 36.dp, start = 16.dp)
-                    ) {
-                        OutlinedTextField(
-                            modifier = Modifier
-                                .width(240.dp)
-                                .height(56.dp),
-                            value = userState.value.recentExerciseName,
-                            onValueChange = {
-                                userViewModel.saveExerciseName(it)
-                            },
-                            singleLine = true,
-                            enabled = enableExerciseTextField.value,
-                            placeholder = {
-                                Text(
-                                    text = stringResource(id = R.string.hint_recent_exercise),
-                                    color = Color.Gray
-                                )
-                            },
-                            keyboardActions = KeyboardActions(
-                                onDone = {
-                                    focusManager.clearFocus()
-                                }
-                            )
-                        )
-                    }
-                }
-
-                Text(
-                    text = "3. 원하는 목소리를 선택해주세요! (같이 함께합니다!)",
-                    modifier = Modifier
-                        .padding(top = 32.dp, start = 16.dp),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = fontSize
-                )
-
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .selectableGroup()
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceAround
-                    ) {
-                        genderOptions.forEach { text ->
-                            Box(
-                                modifier = Modifier
-                                    .height(120.dp)
-                                    .selectable(
-                                        selected = (text == voiceSelectedOption),
-                                        onClick = {
-                                            val voiceType = when(text) {
-                                                "남자" -> VoiceType.MALE
-                                                else -> VoiceType.FEMALE
-                                            }
-
-                                            onOptionSelected(text)
-
-                                            ttsViewModel.preview("안녕하세요. 저와 함께해요!", voiceType)
-                                        }
-                                    )
-                                    .padding(vertical = 8.dp),
-                            ) {
-                                RadioButton(
-                                    selected = (text == voiceSelectedOption),
-                                    onClick = null,
-                                    colors = RadioButtonDefaults.colors(
-                                        selectedColor = Color(0xFF2377f9)
-                                    )
-                                )
-
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Text(
-                                        text = text,
-                                        fontWeight = FontWeight.Bold
-                                    )
-
-                                    if (text == "남자") {
-                                        Image(
-                                            modifier = Modifier
-                                                .size(120.dp),
-                                            painter = painterResource(R.drawable.tts_man),
-                                            contentDescription = "남자 TTS 캐릭터"
-                                        )
-                                    } else {
-                                        Image(
-                                            modifier = Modifier
-                                                .size(120.dp),
-                                            painter = painterResource(R.drawable.tts_human),
-                                            contentDescription = "여자 TTS 캐릭터"
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(110.dp)
-                        .padding(top = 32.dp)
-                ) {
-                    Text(
-                        text = "4. 하루에 꾸준히 걷기 또는 달리기를 하시나요?",
-                        modifier = Modifier.padding(start = 16.dp),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = fontSize
-                    )
-
-                    RadioRow(
-                        yesORNo = yesORNo,
-                        id = 1,
-                        selectedOption = selectedOption1,
-                        onOptionSelected = setSelectedOption1,
-                        userState = userState
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(110.dp)
-                        .padding(top = 24.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .height(48.dp)
-                    ) {
-                        Text(
-                            text = "4-1. 조깅이나 걷기를 주 몇 번 하시나요? 몇 분 정도 하시나요?",
-                            modifier = Modifier.padding(start = 16.dp),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = fontSize
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier.padding(top = 32.dp, start = 16.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-
-                            Text(
-                                text = "주: ",
-                                fontWeight = FontWeight.Bold
-                            )
-
-                            OutlinedTextField(
-                                modifier = Modifier
-                                    .width(60.dp)
-                                    .height(56.dp),
-                                value = userState.value.recentWalkingOfWeek,
-                                onValueChange = {
-                                    userViewModel.saveWalkingOfWeek(it)
-                                },
-                                singleLine = true,
-                                enabled = enableWalkingTextField.value,
-                                placeholder = {
-                                    Text(
-                                        text = stringResource(id = R.string.hint_exercise_week),
-                                        color = Color.Gray
-                                    )
-                                },
-                                keyboardOptions = KeyboardOptions.Default.copy(
-                                    keyboardType = KeyboardType.Number
-                                )
-                            )
-
-                            Spacer(width = 80.dp, height = 0.dp)
-
-                            Text(
-                                text = "시간: ",
-                                fontWeight = FontWeight.Bold
-                            )
-
-                            OutlinedTextField(
-                                modifier = Modifier
-                                    .width(120.dp)
-                                    .height(56.dp),
-                                value = userState.value.recentWalkingOfTime,
-                                onValueChange = {
-                                    userViewModel.saveWalkingOfTime(it)
-                                },
-                                singleLine = true,
-                                enabled = enableWalkingTextField.value,
-                                placeholder = {
-                                    Text(
-                                        text = stringResource(id = R.string.hint_exercise_time),
-                                        color = Color.Gray
-                                    )
-                                },
-                                keyboardOptions = KeyboardOptions.Default.copy(
-                                    keyboardType = KeyboardType.Number
-                                )
-                            )
-                        }
-                    }
-                }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
-                        .padding(top = 46.dp)
-                ) {
-                    Text(
-                        text = "5. 운동 중 목표 기간이 있습니까?",
-                        modifier = Modifier.padding(start = 16.dp),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = fontSize
-                    )
-
-                    RadioRow(
-                        yesORNo = yesORNo,
-                        id = 2,
-                        selectedOption = selectedOption2,
-                        onOptionSelected = setSelectedOption2,
-                        userState = userState
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
-                        .padding(top = 46.dp)
-                ) {
-                    Text(
-                        text = "6. 현재 가지고 계신 스마트 워치가 있으신가요?",
-                        modifier = Modifier.padding(start = 16.dp),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = fontSize
-                    )
-
-                    RadioRow(
-                        yesORNo = yesORNo,
-                        id = 3,
-                        selectedOption = selectedOption3,
-                        onOptionSelected = setSelectedOption3,
-                        userState = userState
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                ) {
-                    Button(
-                        onClick = {
-                            val users = userState.value
-
-                            if(users.age != 0.0f && users.recentExerciseName.isNotEmpty() && users.recentWalkingOfWeek.isNotEmpty() && users.recentWalkingOfTime.isNotEmpty()) {
-                                val userStateJson = Uri.encode(Json.encodeToString(userState.value))
-                                val voiceStateJson = Uri.encode(Json.encodeToString(voice.value))
-
-                                navController.navigate("report?userState=${userStateJson}&voiceState=${voiceStateJson}")
-                            } else if (users.age == 0.0f) {
-                                Toast.makeText(context, "나이를 입력해주세요.", Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(context, "입력하지 않은 정보가 있습니다.", Toast.LENGTH_SHORT).show()
-                            }
-                        },
-                        modifier = Modifier
-                            .width(setUpWidth()),
-                        shape = RectangleShape,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF5c9afa)
-                        )
-                    ) {
-                        Text(text = "정보 작성 완료!")
-                    }
-                }
+        ) { page ->
+            when (page) {
+                0 -> AgeInfo()
+                1 -> Text("최근 운동 입력")
             }
         }
+
+        HorizontalPagerIndicator(
+            pagerState = pagerState,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(16.dp)
+        )
     }
 }

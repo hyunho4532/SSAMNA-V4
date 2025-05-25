@@ -50,8 +50,8 @@ class StateViewModel @Inject constructor(
 
         val theme = stateCase.themeSelect(
             userId = userId!!
-        ).first()
+        ).firstOrNull()
 
-        _isDarkTheme.value = theme.isTheme
+        _isDarkTheme.value = theme?.isTheme ?: false
     }
 }
