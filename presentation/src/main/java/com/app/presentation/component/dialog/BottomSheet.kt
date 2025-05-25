@@ -45,6 +45,7 @@ import com.app.presentation.component.tool.challengeCard
 import com.app.domain.model.enum.CardType
 import com.app.domain.model.state.ChallengeMaster
 import com.app.domain.model.state.ChallengeSub
+import com.app.domain.model.user.User
 import com.app.presentation.component.util.responsive.setUpWidth
 import com.app.presentation.viewmodel.JsonParseViewModel
 import com.app.presentation.viewmodel.StateViewModel
@@ -298,6 +299,40 @@ fun ActivateDetailBottomSheet(
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UserUpdateBottomSheet(
+    context: Context,
+    showBottomSheet: MutableState<Boolean>,
+    sheetState: SheetState,
+    user: User
+) {
+    if (showBottomSheet.value) {
+        ModalBottomSheet(
+            modifier = Modifier
+                .fillMaxSize(),
+            sheetState = sheetState,
+            onDismissRequest = { showBottomSheet.value = false },
+            containerColor = MaterialTheme.colorScheme.surface
+        ) {
+            Column (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Card (
+                    modifier = Modifier
+                        .width(setUpWidth())
+                        .height(60.dp)
+                        .padding(top = 8.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface)
+                ) {
+                    
                 }
             }
         }

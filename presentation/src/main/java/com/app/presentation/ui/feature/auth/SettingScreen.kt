@@ -63,6 +63,13 @@ fun SettingScreen(
         mutableStateOf(genderOptions[0])
     }
 
+    /**
+     * 내 정보 수정 시 팝업 창 상태
+     */
+    val isInfoUser = remember {
+        mutableStateOf(false)
+    }
+
     val voice = ttsViewModel.voice.collectAsState()
 
     Column(
@@ -74,7 +81,8 @@ fun SettingScreen(
         Text(
             text = user.name,
             fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Spacer(width = 0.dp, height = 30.dp)
@@ -94,7 +102,82 @@ fun SettingScreen(
                     modifier = Modifier
                         .padding(start = 6.dp),
                     text = "로그아웃",
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Image(
+                    modifier = Modifier
+                        .size(28.dp),
+                    painter = painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
+                    contentDescription = "활동 아이콘",
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                )
+            }
+        }
+
+        Spacer(
+            width = 0.dp,
+            height = 30.dp
+        )
+
+        Card(
+            modifier = Modifier
+                .width(setUpWidth())
+                .height(48.dp)
+                .clickable {
+                    isInfoUser.value = true
+                },
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 6.dp),
+                    text = "내 정보 수정",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Image(
+                    modifier = Modifier
+                        .size(28.dp),
+                    painter = painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
+                    contentDescription = "활동 아이콘",
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                )
+            }
+        }
+
+        Spacer(
+            width = 0.dp,
+            height = 30.dp
+        )
+
+        Card(
+            modifier = Modifier
+                .width(setUpWidth())
+                .height(48.dp)
+                .clickable {
+                    stateViewModel.toggleTheme()
+                },
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 6.dp),
+                    text = "다크 모드",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Image(
@@ -163,7 +246,8 @@ fun SettingScreen(
                             ) {
                                 Text(
                                     text = text,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
 
                                 if (text == "남자") {
@@ -201,17 +285,6 @@ fun SettingScreen(
         Spacer(
             width = 0.dp,
             height = 30.dp
-        )
-
-        CustomButton(
-            type = ButtonType.EventStatus.DARKTHEME,
-            width = setUpWidth(),
-            height = 46.dp,
-            text = "다크 모드 활성화",
-            showIcon = true,
-            shape = "Rectangle",
-            data = voice,
-            stateViewModel = stateViewModel
         )
     }
 }

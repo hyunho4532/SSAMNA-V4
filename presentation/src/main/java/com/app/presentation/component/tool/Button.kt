@@ -110,12 +110,6 @@ fun CustomButton(
                 ButtonType.EventStatus.ROUTE -> {
                     onClick(true)
                 }
-                ButtonType.EventStatus.DARKTHEME -> {
-                    /**
-                     * 클릭 시, 테마가 바뀐다./
-                     */
-                    stateViewModel.toggleTheme()
-                }
                 ButtonType.PermissionStatus.USERCANCEL -> {
                     onNavigateToCheck(false)
                 }
