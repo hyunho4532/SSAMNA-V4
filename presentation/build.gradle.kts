@@ -59,7 +59,7 @@ dependencies {
     implementation(libs.lottie)
     implementation(libs.fagadiya.smooth.bottom.navigation)
 
-    implementation(libs.google.accompanist.pager)
+    implementation(libs.compose.foundation.pager)
     implementation(libs.google.accompanist.pager.indicator )
     implementation(libs.google.maps.compose)
     implementation(libs.play.services.maps)

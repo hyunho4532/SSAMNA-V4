@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,7 +46,6 @@ import com.app.presentation.component.util.Const
 import com.app.presentation.viewmodel.TTSViewModel
 import com.app.presentation.viewmodel.UserViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.PagerState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
@@ -243,23 +244,43 @@ fun VoiceInfo(
             }
         }
 
-        FloatingActionButton(
-            onClick = {
-                if (userState.value.recentWalkingOfWeek.isNotEmpty() && userState.value.recentWalkingOfTime.isNotEmpty()) {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(3)
-                    }
-                }
-            },
+        Row(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            containerColor = if (userState.value.recentWalkingOfWeek.isNotEmpty() && userState.value.recentWalkingOfTime.isNotEmpty()) Color(0xFF5c9afa) else Color.Gray
+                .fillMaxWidth()
+                .padding(16.dp)
+                .align(Alignment.BottomCenter),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Icon(
-                imageVector = Icons.Filled.KeyboardArrowRight,
-                contentDescription = "Floating action button."
-            )
+            FloatingActionButton(
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                    }
+                },
+                containerColor = Color(0xFF5c9afa)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowRight,
+                    contentDescription = "뒤로 가기",
+                    modifier = Modifier.rotate(180f) // ← 방향으로 아이콘 회전
+                )
+            }
+
+            FloatingActionButton(
+                onClick = {
+                    if (userState.value.recentWalkingOfWeek.isNotEmpty() && userState.value.recentWalkingOfTime.isNotEmpty()) {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                        }
+                    }
+                },
+                containerColor = if (userState.value.recentWalkingOfWeek.isNotEmpty() && userState.value.recentWalkingOfTime.isNotEmpty()) Color(0xFF5c9afa) else Color.Gray
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowRight,
+                    contentDescription = "앞으로 가기"
+                )
+            }
         }
     }
 }

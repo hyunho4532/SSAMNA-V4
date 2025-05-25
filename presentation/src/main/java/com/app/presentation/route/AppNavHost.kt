@@ -36,6 +36,7 @@ import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.JsonParseViewModel
 import com.app.presentation.viewmodel.StateViewModel
 import com.app.presentation.viewmodel.UserViewModel
+import com.google.accompanist.pager.PagerState
 import com.google.android.gms.location.LocationServices
 import io.github.jan.supabase.gotrue.user.UserInfo
 import kotlinx.serialization.json.Json
@@ -67,26 +68,6 @@ fun AppNavHost() {
                 navController = navController,
                 user = user
             )
-        }
-
-        composable(
-            route = "report?userState={userState}&voiceState={voiceState}",
-            arguments = listOf(
-                navArgument("userState") {
-                    type = NavType.StringType
-                },
-                navArgument("voiceState") {
-                    type = NavType.StringType
-                }
-            )
-        ) { backStackEntry ->
-            val userStateJson = backStackEntry.arguments?.getString("userState")
-            val userState = Json.decodeFromString<User>(userStateJson!!)
-
-            val voiceStateJson = backStackEntry.arguments?.getString("voiceState")
-            val voiceState = Json.decodeFromString<Voice>(voiceStateJson!!)
-
-            ReportScreen(userState, voiceState)
         }
     }
 }
