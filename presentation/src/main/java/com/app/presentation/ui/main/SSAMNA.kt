@@ -27,11 +27,7 @@ class SSAMNA : ComponentActivity() {
         val id = userViewModel.user.value.id
 
         setContent {
-            if (id != "") {
-                navigateToHome()
-            } else {
-                AppNavHost()
-            }
+            AppNavHost()
         }
     }
 

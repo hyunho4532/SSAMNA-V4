@@ -17,4 +17,6 @@ class DefaultSwitch {
  */
 class Const {
     val pages = listOf("나이", "운동", "목소리", "걷기", "목표 기간", "스마트 워치")
+    val yesORNo = listOf("네", "아니요")
+    val gender = listOf("남자", "여자")
 }
