@@ -19,6 +19,7 @@ import com.app.domain.model.user.User
 import com.app.presentation.component.util.Const
 import com.app.presentation.ui.feature.login.info.AgeInfo
 import com.app.presentation.ui.feature.login.info.ExerciseInfo
+import com.app.presentation.ui.feature.login.info.GoalInfo
 import com.app.presentation.ui.feature.login.info.VoiceInfo
 import com.app.presentation.viewmodel.TTSViewModel
 import com.app.presentation.viewmodel.UserViewModel
@@ -42,34 +43,12 @@ fun UserInfoScreen(
      */
     val pagerState = rememberPagerState()
 
-    val genderOptions = listOf("남자", "여자")
-
-    val (voiceSelectedOption, onOptionSelected) = remember {
-        mutableStateOf(genderOptions[0])
-    }
-
-    val yesORNo = listOf("네", "아니요")
-
     val userState = userViewModel.user.collectAsState()
-    val voice = ttsViewModel.voice.collectAsState()
-
-    val enableExerciseTextField = remember {
-        mutableStateOf(true)
-    }
-
-    val enableWalkingTextField = remember {
-        mutableStateOf(true)
-    }
 
     LaunchedEffect(user) {
         if (user.email.isNotEmpty()) {
             userViewModel.mergeAuthStateIntoUserState(user = user)
         }
-    }
-
-    LaunchedEffect(userState.value) {
-        enableExerciseTextField.value = userState.value.recentExerciseCheck == "네"
-        enableWalkingTextField.value = userState.value.recentWalkingCheck == "네"
     }
 
     Column(
@@ -92,6 +71,10 @@ fun UserInfoScreen(
                     pagerState = pagerState
                 )
                 2 -> VoiceInfo(
+                    userState = userState,
+                    pagerState = pagerState
+                )
+                3 -> GoalInfo(
                     userState = userState
                 )
             }

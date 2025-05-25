@@ -65,8 +65,7 @@ fun AppNavHost() {
 
             UserInfoScreen(
                 navController = navController,
-                user = user,
-                context = context
+                user = user
             )
         }
 
