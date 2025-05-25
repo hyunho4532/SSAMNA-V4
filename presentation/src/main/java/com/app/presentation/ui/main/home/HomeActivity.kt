@@ -1,11 +1,13 @@
 package com.app.presentation.ui.main.home
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
@@ -22,6 +24,11 @@ class HomeActivity : ComponentActivity() {
 
         setContent {
             val themeViewModel: StateViewModel = viewModel()
+
+            LaunchedEffect(Unit) {
+                themeViewModel.themeSelect()
+            }
+
             val isDarkTheme by themeViewModel.isDarkTheme
 
             SsamnaTheme(darkTheme = isDarkTheme) {

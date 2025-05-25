@@ -1,4 +1,4 @@
-package com.app.domain.repository.sensor
+package com.app.domain.repository
 
 import android.hardware.SensorEventListener
 

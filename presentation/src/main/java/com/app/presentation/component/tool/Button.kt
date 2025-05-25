@@ -78,7 +78,7 @@ fun CustomButton(
     challengeViewModel: ChallengeViewModel = hiltViewModel(),
     userViewModel: UserViewModel = hiltViewModel(),
     crewViewModel: CrewViewModel = hiltViewModel(),
-    stateViewModel: StateViewModel = StateViewModel(),
+    stateViewModel: StateViewModel = hiltViewModel(),
     ttsViewModel: TTSViewModel = hiltViewModel()
 ) {
     val activates = activityLocationViewModel.activates.collectAsState()

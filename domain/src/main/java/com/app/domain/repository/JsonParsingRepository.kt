@@ -1,4 +1,4 @@
-package com.app.domain.repository.json
+package com.app.domain.repository
 
 import com.app.domain.model.state.ActivityType
 

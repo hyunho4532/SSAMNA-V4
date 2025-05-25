@@ -7,9 +7,7 @@ import com.app.domain.model.location.Coordinate
 import com.app.domain.model.state.Activate
 import com.app.domain.model.state.ActivateForm
 import com.app.domain.model.state.ActivityType
-import com.app.domain.model.user.User
-import com.app.domain.model.user.UserDTO
-import com.app.domain.repository.json.JsonParsingRepository
+import com.app.domain.repository.JsonParsingRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext

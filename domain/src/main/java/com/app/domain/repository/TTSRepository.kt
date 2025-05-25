@@ -1,4 +1,4 @@
-package com.app.domain.repository.tts
+package com.app.domain.repository
 
 import com.app.domain.model.enum.VoiceType
 import com.app.domain.model.state.Voice

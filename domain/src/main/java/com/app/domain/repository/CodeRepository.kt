@@ -1,4 +1,4 @@
-package com.app.domain.repository.common
+package com.app.domain.repository
 
 import com.app.domain.model.common.Code
 

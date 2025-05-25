@@ -1,7 +1,7 @@
 package com.app.data.repository.common
 
 import com.app.domain.model.common.Code
-import com.app.domain.repository.common.CodeRepository
+import com.app.domain.repository.CodeRepository
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.rpc
 import kotlinx.coroutines.Dispatchers

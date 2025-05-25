@@ -1,4 +1,4 @@
-package com.app.domain.repository.user
+package com.app.domain.repository
 
 import com.app.domain.model.user.User
 import com.app.domain.model.user.UserDTO

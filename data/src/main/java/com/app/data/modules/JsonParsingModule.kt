@@ -1,7 +1,7 @@
 package com.app.data.modules
 
 import com.app.data.repository.json.JsonParsingRepositoryImpl
-import com.app.domain.repository.json.JsonParsingRepository
+import com.app.domain.repository.JsonParsingRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

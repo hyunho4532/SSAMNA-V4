@@ -1,4 +1,4 @@
-package com.app.domain.repository.crew
+package com.app.domain.repository
 
 import com.app.domain.model.dto.ActivateNotificationDTO
 import com.app.domain.model.dto.CrewDTO

@@ -1,4 +1,4 @@
-package com.app.domain.repository.challenge
+package com.app.domain.repository
 
 import com.app.domain.model.dto.ChallengeDTO
 import com.app.domain.model.state.ChallengeMaster

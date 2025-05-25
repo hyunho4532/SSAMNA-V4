@@ -1,9 +1,8 @@
 package com.app.data.repository.activate
 
-import android.util.Log
 import com.app.domain.model.dto.ActivateDTO
 import com.app.domain.model.dto.ActivateNotificationDTO
-import com.app.domain.repository.activate.ActivateRepository
+import com.app.domain.repository.ActivateRepository
 import io.github.jan.supabase.postgrest.Postgrest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

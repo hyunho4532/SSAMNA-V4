@@ -2,7 +2,7 @@ package com.app.domain.usecase.tts
 
 import com.app.domain.model.enum.VoiceType
 import com.app.domain.model.state.Voice
-import com.app.domain.repository.tts.TTSRepository
+import com.app.domain.repository.TTSRepository
 import javax.inject.Inject
 
 class TTSCase @Inject constructor(

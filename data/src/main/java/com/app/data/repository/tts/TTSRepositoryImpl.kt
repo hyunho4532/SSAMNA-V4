@@ -1,10 +1,9 @@
 package com.app.data.repository.tts
 
 import com.app.data.manager.tts.TTSManager
-import com.app.domain.model.dto.CrewDTO
 import com.app.domain.model.enum.VoiceType
 import com.app.domain.model.state.Voice
-import com.app.domain.repository.tts.TTSRepository
+import com.app.domain.repository.TTSRepository
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.rpc
 import kotlinx.coroutines.Dispatchers

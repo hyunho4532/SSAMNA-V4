@@ -1,4 +1,4 @@
-package com.app.domain.repository.activate
+package com.app.domain.repository
 
 import com.app.domain.model.dto.ActivateDTO
 import com.app.domain.model.dto.ActivateNotificationDTO

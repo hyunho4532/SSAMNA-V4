@@ -1,7 +1,7 @@
 package com.app.data.modules
 
 import com.app.data.repository.activate.ActivateRepositoryImpl
-import com.app.domain.repository.activate.ActivateRepository
+import com.app.domain.repository.ActivateRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,7 +1,7 @@
 package com.app.data.modules
 
 import com.app.data.repository.auth.AuthenticationRepositoryImpl
-import com.app.domain.repository.user.AuthenticationRepository
+import com.app.domain.repository.AuthenticationRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

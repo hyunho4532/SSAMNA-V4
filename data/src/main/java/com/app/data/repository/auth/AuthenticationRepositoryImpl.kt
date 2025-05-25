@@ -3,7 +3,7 @@ package com.app.data.repository.auth
 import android.util.Log
 import com.app.domain.model.user.User
 import com.app.domain.model.user.UserDTO
-import com.app.domain.repository.user.AuthenticationRepository
+import com.app.domain.repository.AuthenticationRepository
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
