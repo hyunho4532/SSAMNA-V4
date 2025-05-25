@@ -19,10 +19,12 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +45,7 @@ import com.app.domain.model.enum.ButtonType
 import com.app.domain.model.enum.VoiceType
 import com.app.domain.model.user.User
 import com.app.presentation.R
+import com.app.presentation.component.dialog.UserUpdateBottomSheet
 import com.app.presentation.component.tool.CustomButton
 import com.app.presentation.component.tool.Spacer
 import com.app.presentation.component.util.responsive.setUpWidth
@@ -52,6 +55,7 @@ import com.app.presentation.viewmodel.TTSViewModel
 /**
  * 사용자 설정 화면
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
     user: User,
@@ -62,6 +66,10 @@ fun SettingScreen(
     val (selectedOption, onOptionSelected) = remember {
         mutableStateOf(genderOptions[0])
     }
+
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false
+    )
 
     /**
      * 내 정보 수정 시 팝업 창 상태
@@ -285,6 +293,14 @@ fun SettingScreen(
         Spacer(
             width = 0.dp,
             height = 30.dp
+        )
+    }
+
+    if (isInfoUser.value) {
+        UserUpdateBottomSheet(
+            showBottomSheet = isInfoUser,
+            sheetState = sheetState,
+            user = user
         )
     }
 }
