@@ -21,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -151,7 +152,10 @@ fun SettingScreen(
                         ) {
                             RadioButton(
                                 selected = (text == selectedOption),
-                                onClick = null
+                                onClick = null,
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Color(0xFF2377f9)
+                                )
                             )
 
                             Column(
