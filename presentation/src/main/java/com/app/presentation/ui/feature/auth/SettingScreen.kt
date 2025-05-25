@@ -48,6 +48,7 @@ import com.app.presentation.R
 import com.app.presentation.component.dialog.UserUpdateBottomSheet
 import com.app.presentation.component.tool.CustomButton
 import com.app.presentation.component.tool.Spacer
+import com.app.presentation.component.util.Const
 import com.app.presentation.component.util.responsive.setUpWidth
 import com.app.presentation.viewmodel.StateViewModel
 import com.app.presentation.viewmodel.TTSViewModel
@@ -62,9 +63,12 @@ fun SettingScreen(
     stateViewModel: StateViewModel,
     ttsViewModel: TTSViewModel = hiltViewModel()
 ) {
-    val genderOptions = listOf("남자", "여자")
     val (selectedOption, onOptionSelected) = remember {
-        mutableStateOf(genderOptions[0])
+        mutableStateOf(Const().gender[0])
+    }
+
+    val (timeSelected, setTimeSelected) = remember {
+        mutableStateOf(Const().time[0])
     }
 
     val sheetState = rememberModalBottomSheetState(
@@ -206,7 +210,7 @@ fun SettingScreen(
         Card(
             modifier = Modifier
                 .width(setUpWidth())
-                .height(180.dp),
+                .height(260.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         ) {
             Column(
@@ -220,14 +224,14 @@ fun SettingScreen(
                         .padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    genderOptions.forEach { text ->
+                    Const().gender.forEach { text ->
                         Box(
                             modifier = Modifier
                                 .height(120.dp)
                                 .selectable(
                                     selected = (text == selectedOption),
                                     onClick = {
-                                        val voiceType = when(text) {
+                                        val voiceType = when (text) {
                                             "남자" -> VoiceType.MALE
                                             else -> VoiceType.FEMALE
                                         }
@@ -271,6 +275,56 @@ fun SettingScreen(
                                             .size(120.dp),
                                         painter = painterResource(R.drawable.tts_human),
                                         contentDescription = "여자 TTS 캐릭터"
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .selectableGroup()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        Const().time.forEach { text ->
+                            Box(
+                                modifier = Modifier
+                                    .height(62.dp)
+                                    .selectable(
+                                        selected = (text == timeSelected),
+                                        onClick = {
+                                            setTimeSelected(text)
+                                        }
+                                    )
+                                    .padding(vertical = 8.dp),
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(start = 12.dp)
+                                ) {
+                                    RadioButton(
+                                        selected = (text == timeSelected),
+                                        onClick = null,
+                                        colors = RadioButtonDefaults.colors(
+                                            selectedColor = Color(0xFF2377f9)
+                                        )
+                                    )
+                                }
+
+                                Column(
+                                    modifier = Modifier
+                                        .padding(top = 24.dp)
+                                ) {
+                                    Text(
+                                        text = text,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                             }

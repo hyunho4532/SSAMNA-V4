@@ -42,6 +42,7 @@ class TTSRepositoryImpl @Inject constructor(
                 put("p_user_id", JsonPrimitive(voice.userId))
                 put("p_name", JsonPrimitive(voice.name))
                 put("p_language_code", JsonPrimitive(voice.languageCode))
+                put("p_time", JsonPrimitive(voice.time))
             }
 
             postgrest.rpc("insert_voice", params)

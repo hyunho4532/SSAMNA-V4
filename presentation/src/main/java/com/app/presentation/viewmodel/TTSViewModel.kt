@@ -29,6 +29,7 @@ class TTSViewModel @Inject constructor(
     private val _voice = MutableStateFlow(Voice(
         languageCode = "",
         name = "",
+
     ))
 
     val voice: StateFlow<Voice> = _voice
@@ -44,8 +45,17 @@ class TTSViewModel @Inject constructor(
                     name = it.name
                 )
             }
+        }
+    }
 
-            Log.d("TTSViewModel", _voice.value.toString())
+    /**
+     * 보이스 시간 설정
+     */
+    fun time(text: String) {
+        _voice.update { voice ->
+            voice.copy(
+                time = text
+            )
         }
     }
 

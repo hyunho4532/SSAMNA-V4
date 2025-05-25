@@ -12,5 +12,8 @@ data class Voice (
     val languageCode: String = "",
 
     @SerialName("name")
-    val name: String = ""
+    val name: String = "",
+
+    @SerialName("time")
+    val time: String = ""
 )
