@@ -15,5 +15,5 @@ data class Voice (
     val name: String = "",
 
     @SerialName("time")
-    val time: String = ""
+    val time: Int = 0
 )

@@ -52,9 +52,16 @@ class TTSViewModel @Inject constructor(
      * 보이스 시간 설정
      */
     fun time(text: String) {
+        val formatTime = when (text) {
+            "05:00" -> 300
+            "10:00" -> 600
+            "20:00" -> 1200
+            else -> 1800
+        }
+
         _voice.update { voice ->
             voice.copy(
-                time = text
+                time = formatTime
             )
         }
     }

@@ -300,6 +300,7 @@ fun SettingScreen(
                                         selected = (text == timeSelected),
                                         onClick = {
                                             setTimeSelected(text)
+                                            ttsViewModel.time(text)
                                         }
                                     )
                                     .padding(vertical = 8.dp),

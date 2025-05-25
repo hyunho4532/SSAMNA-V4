@@ -2,6 +2,7 @@ package com.app.presentation.viewmodel
 
 import android.content.Context
 import android.hardware.SensorEventListener
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.domain.model.state.Activate
@@ -110,6 +111,10 @@ class SensorManagerViewModel @Inject constructor(
 
     // 타이머 시작
     fun startWatch() {
+        /**
+         * 타이머를 시작하기 전, 현재 사용자의 Voice time 값을 가져온다.
+         */
+
         if (stopwatchJob == null) {
             stopwatchJob = viewModelScope.launch {
                 while (true) {
