@@ -187,7 +187,7 @@ class ActivityLocationViewModel @Inject constructor(
         ).build()
 
         val activateDTO = ActivateDTO (
-            googleId = userId!!,
+            userId = userId!!,
             title = _activates.value.runningTitle,
             coord = coordinateData,
             status = statusData,

@@ -26,6 +26,15 @@ class LoginCase @Inject constructor(
         return authenticationRepository.selectUserFindById(googleId)
     }
 
+    /**
+     * 계정 탈퇴
+     */
+    suspend fun deleteAccount(googleId: String, onResult: (Boolean) -> Unit) {
+        return authenticationRepository.deleteAccount(googleId) { result ->
+            onResult(result)
+        }
+    }
+
     suspend fun updateProfileUrl(googleId: String, profileUrl: String) {
         authenticationRepository.updateProfileUrl(googleId, profileUrl)
     }

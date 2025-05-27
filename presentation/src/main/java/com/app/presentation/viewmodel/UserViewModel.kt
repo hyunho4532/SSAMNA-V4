@@ -2,6 +2,7 @@ package com.app.presentation.viewmodel
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.domain.model.state.Voice
@@ -163,6 +164,18 @@ class UserViewModel @Inject constructor(
                     recentExerciseCheck = user.recentExerciseCheck,
                     targetPeriod = user.targetPeriod
                 )
+            }
+        }
+    }
+
+    fun deleteAccount() {
+        val googleId = sharedPreferences.getString("id", "")
+
+        viewModelScope.launch {
+            loginCase.deleteAccount(googleId!!) { result ->
+                if (result) {
+
+                }
             }
         }
     }

@@ -128,6 +128,9 @@ fun CustomButton(
                         longitude = cameraPositionState.position.target.longitude
                     )
                 }
+                ButtonType.UserStatus.DELETE -> {
+                    userViewModel.deleteAccount()
+                }
                 else -> {
                     when (type) {
                         ButtonType.RunningStatus.FINISH -> {
@@ -173,7 +176,7 @@ fun CustomButton(
                         ButtonType.RunningStatus.DeleteStatus.RUNNING -> {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 activityLocationViewModel.deleteActivityFindById(
-                                    googleId = activateData!!.value[0].googleId,
+                                    googleId = activateData!!.value[0].userId,
                                     date = activateData.value[0].todayFormat
                                 ) {
                                     if (it) {

@@ -883,7 +883,7 @@ fun ShowAccountDeleteDialog(
                         .padding(top = 16.dp)
                 ) {
                     CustomButton(
-                        type = ButtonType.RunningStatus.InsertStatus.RUNNING,
+                        type = ButtonType.UserStatus.DELETE,
                         width = 240.dp,
                         height = 32.dp,
                         text = "계정 탈퇴하기",

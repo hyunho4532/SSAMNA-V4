@@ -39,7 +39,7 @@ class ChallengeViewModel @Inject constructor(
 
         try {
             val challengeSub = ChallengeSub(
-                googleId = googleId!!,
+                userId = googleId!!,
                 title = data.name,
                 description = data.description,
                 goal = data.goal,

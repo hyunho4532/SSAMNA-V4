@@ -36,7 +36,7 @@ class ChallengeRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             postgrest.from("ChallengeSub").select {
                 filter {
-                    eq("google_id", googleId)
+                    eq("user_id", googleId)
                 }
             }.decodeList<ChallengeDTO>()
         }

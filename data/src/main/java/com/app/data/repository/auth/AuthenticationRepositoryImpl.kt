@@ -68,6 +68,18 @@ class AuthenticationRepositoryImpl @Inject constructor(
         postgrest.from("User").insert(userDTO)
     }
 
+    override suspend fun deleteAccount(googleId: String, onSuccess: (Boolean) -> Unit) {
+        return withContext(Dispatchers.IO) {
+            val params = buildJsonObject {
+                put("p_user_id", JsonPrimitive(googleId))
+            }
+
+            postgrest.rpc("delete_account", params)
+
+            onSuccess(true)
+        }
+    }
+
     override suspend fun selectUserFindById(googleId: String) : UserDTO {
         return withContext(Dispatchers.IO) {
             postgrest.from("User").select {

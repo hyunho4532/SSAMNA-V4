@@ -24,7 +24,7 @@ class ActivateRepositoryImpl @Inject constructor(
     override suspend fun delete(googleId: String, date: String, onSuccess: (Boolean) -> Unit) {
         postgrest.from("Activate").delete {
             filter {
-                eq("google_id", googleId)
+                eq("user_id", googleId)
                 eq("today_format", date)
             }
         }
@@ -36,7 +36,7 @@ class ActivateRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             postgrest.from("Activate").select {
                 filter {
-                    eq("google_id", googleId)
+                    eq("user_id", googleId)
                 }
             }.decodeList<ActivateDTO>()
         }
@@ -46,7 +46,7 @@ class ActivateRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             postgrest.from("Activate").select {
                 filter {
-                    eq("google_id", googleId)
+                    eq("user_id", googleId)
                     eq("eq_date", date)
                 }
             }.decodeList<ActivateDTO>()

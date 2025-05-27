@@ -27,6 +27,10 @@ sealed class ButtonType {
         }
     }
 
+    sealed class UserStatus: ButtonType() {
+        data object DELETE: UserStatus()
+    }
+
     sealed class HistoryStatus: ButtonType() {
         data object OPEN: RunningStatus()
     }
