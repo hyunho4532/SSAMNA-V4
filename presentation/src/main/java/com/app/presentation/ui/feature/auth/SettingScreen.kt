@@ -45,6 +45,7 @@ import com.app.domain.model.enum.ButtonType
 import com.app.domain.model.enum.VoiceType
 import com.app.domain.model.user.User
 import com.app.presentation.R
+import com.app.presentation.component.dialog.ShowAccountDeleteDialog
 import com.app.presentation.component.dialog.UserUpdateBottomSheet
 import com.app.presentation.component.tool.CustomButton
 import com.app.presentation.component.tool.Spacer
@@ -79,6 +80,13 @@ fun SettingScreen(
      * 내 정보 수정 시 팝업 창 상태
      */
     val isInfoUser = remember {
+        mutableStateOf(false)
+    }
+
+    /**
+     * 계정 탈퇴 팝업 창 상태
+     */
+    val isDeleteAccount = remember {
         mutableStateOf(false)
     }
 
@@ -287,7 +295,7 @@ fun SettingScreen(
                 .width(setUpWidth())
                 .height(48.dp)
                 .clickable {
-                    stateViewModel.toggleTheme()
+                    isDeleteAccount.value = true
                 },
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         ) {
@@ -320,6 +328,12 @@ fun SettingScreen(
             showBottomSheet = isInfoUser,
             sheetState = sheetState,
             user = user
+        )
+    }
+
+    if (isDeleteAccount.value) {
+        ShowAccountDeleteDialog(
+            isDeleteAccount = isDeleteAccount
         )
     }
 }

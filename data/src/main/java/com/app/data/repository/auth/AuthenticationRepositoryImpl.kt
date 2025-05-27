@@ -25,7 +25,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
         val isValidateUser = postgrest.from("User")
             .select {
                 filter {
-                    eq("google_id", task?.result?.id.toString())
+                    eq("user_id", task?.result?.id.toString())
                 }
             }.decodeSingleOrNull<UserDTO>()
 
@@ -53,7 +53,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
 
     override suspend fun saveUser(user: User) {
         val userDTO = UserDTO(
-            googleId = user.id,
+            userId = user.id,
             email = user.email,
             name = user.name,
             age = user.age.toInt(),
@@ -72,7 +72,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             postgrest.from("User").select {
                 filter {
-                    eq("google_id", googleId)
+                    eq("user_id", googleId)
                 }
             }.decodeSingle<UserDTO>()
         }

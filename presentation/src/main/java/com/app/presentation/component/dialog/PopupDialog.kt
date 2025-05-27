@@ -2,11 +2,14 @@ package com.app.presentation.component.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -66,6 +69,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.datetime.format.Padding
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -828,19 +832,20 @@ fun ShowChallengeDetailDialog(
 /**
  * 계정 탈퇴 팝업 여부
  */
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ShowAccountDeleteDialog(
-    isAccountDelete: MutableState<Boolean>,
+    isDeleteAccount: MutableState<Boolean>,
 ) {
     Dialog(
         onDismissRequest = {
-            isAccountDelete.value = false
+            isDeleteAccount.value = false
         }
     ) {
         Card(
             modifier = Modifier
                 .width(420.dp)
-                .height(200.dp),
+                .height(160.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color.White
@@ -848,12 +853,44 @@ fun ShowAccountDeleteDialog(
         ) {
             Column (
                 modifier = Modifier
+                    .fillMaxSize()
                     .padding(
-                        top = 14.dp,
-                        start = 8.dp
-                    )
+                        top = 14.dp
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Text(
+                    text = "계정 탈퇴",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                )
 
+                Text(
+                    text = "정말로 탈퇴하시겠습니까?",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = "탈퇴하시면 영원히 되돌릴 수 없습니다.",
+                    fontSize = 12.sp,
+                    color = Color.Red,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Box(
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                ) {
+                    CustomButton(
+                        type = ButtonType.RunningStatus.InsertStatus.RUNNING,
+                        width = 240.dp,
+                        height = 32.dp,
+                        text = "계정 탈퇴하기",
+                        showIcon = false,
+                        shape = "Rectangle"
+                    )
+                }
             }
         }
     }
