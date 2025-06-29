@@ -42,12 +42,14 @@ import com.app.domain.model.enum.VoiceType
 import com.app.domain.model.state.ChallengeMaster
 import com.app.domain.model.state.CrewMaster
 import com.app.domain.model.state.Voice
+import com.app.domain.model.user.UserDTO
 import com.app.presentation.ui.main.home.HomeActivity
 import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.ChallengeViewModel
 import com.app.presentation.viewmodel.CrewViewModel
 import com.app.presentation.viewmodel.LocationManagerViewModel
 import com.app.presentation.viewmodel.SensorManagerViewModel
+import com.app.presentation.viewmodel.ShowdownViewModel
 import com.app.presentation.viewmodel.StateViewModel
 import com.app.presentation.viewmodel.TTSViewModel
 import com.app.presentation.viewmodel.UserViewModel
@@ -81,7 +83,8 @@ fun CustomButton(
     userViewModel: UserViewModel = hiltViewModel(),
     crewViewModel: CrewViewModel = hiltViewModel(),
     stateViewModel: StateViewModel = hiltViewModel(),
-    ttsViewModel: TTSViewModel = hiltViewModel()
+    ttsViewModel: TTSViewModel = hiltViewModel(),
+    showdownViewModel: ShowdownViewModel = hiltViewModel()
 ) {
     val activates = activityLocationViewModel.activates.collectAsState()
 
@@ -141,6 +144,13 @@ fun CustomButton(
                              * 조회되기 전, 데이터를 먼저 전달 후, 팝업된다.
                              */
                             dataIntent(true, data!!)
+                        }
+                        ButtonType.ShowdownStatus.INSERT -> {
+                            showdownViewModel.insert(
+                                userId = googleId,
+                                username = username,
+                                data = data as UserDTO
+                            )
                         }
                         ButtonType.RunningStatus.FINISH -> {
                             if (sensorManagerViewModel.getSavedSensorState() < 100) {

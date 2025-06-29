@@ -941,7 +941,7 @@ fun ShowdownInviteDialog(
                         .padding(top = 12.dp)
                 ) {
                     CustomButton(
-                        type = ButtonType.ShowdownStatus.INVITE,
+                        type = ButtonType.ShowdownStatus.INSERT,
                         width = setUpWidth(),
                         height = 38.dp,
                         text = "상대와 대결하기",
