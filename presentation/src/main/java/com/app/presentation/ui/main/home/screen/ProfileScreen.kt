@@ -258,7 +258,7 @@ fun ProfileScreen(
                 )
 
                 Icon(
-                    Icons.Filled.Settings,
+                    painter = painterResource(R.drawable.showdown),
                     contentDescription = "대결 조회 아이콘",
                     modifier = Modifier.clickable {
                         val userJson = Json.encodeToString(userList.value)
