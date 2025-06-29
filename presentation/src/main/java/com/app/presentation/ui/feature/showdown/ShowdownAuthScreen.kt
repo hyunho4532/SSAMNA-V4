@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.domain.model.state.ChallengeMaster
 import com.app.domain.model.user.UserDTO
+import com.app.presentation.component.tool.showdownAuthCard
 import com.app.presentation.viewmodel.UserViewModel
 
 /**
@@ -49,8 +50,9 @@ fun ShowdownAuthScreen(
         )
 
         userListMaster.forEach { userDTO ->
-            Text(
-                text = userDTO.name
+            showdownAuthCard(
+                height = 46.dp,
+                userDTO = userDTO
             )
         }
     }

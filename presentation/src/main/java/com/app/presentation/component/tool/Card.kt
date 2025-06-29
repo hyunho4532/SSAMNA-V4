@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -67,6 +68,7 @@ import com.app.presentation.R
 import com.app.presentation.component.util.responsive.setUpWidth
 import com.app.domain.model.enum.CardType
 import com.app.domain.model.state.ChallengeMaster
+import com.app.domain.model.user.UserDTO
 import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.JsonParseViewModel
 import com.app.presentation.viewmodel.StateViewModel
@@ -798,12 +800,18 @@ fun chartDetailCard(
 @Composable
 fun showdownAuthCard(
     height: Dp,
-    navController: NavController = rememberNavController()
+    userDTO: UserDTO
 ) {
     Card (
         modifier = Modifier
+            .padding(top = 8.dp)
             .width(setUpWidth())
             .height(height)
+            .shadow(
+                elevation = 6.dp,
+                ambientColor = Color.Gray,
+                spotColor = Color.Gray
+            )
             .clickable(
                 interactionSource = remember {
                     MutableInteractionSource()
@@ -815,7 +823,9 @@ fun showdownAuthCard(
             ) {
 
             },
-        border = BorderStroke(1.dp, Color.Gray)
+        colors = CardDefaults.cardColors(
+            contentColor = Color.White
+        )
     ) {
         Row (
             modifier = Modifier
@@ -823,25 +833,19 @@ fun showdownAuthCard(
                 .padding(start = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.baseline_graph_24),
-                contentDescription = "그래프 로고",
-                tint = MaterialTheme.colorScheme.onSurface
+            Image(
+                modifier = Modifier
+                    .size(32.dp),
+                painter = painterResource(id = R.drawable.default_user),
+                contentDescription = "땀나 기본 로고"
             )
 
             Column {
                 Text(
                     modifier = Modifier.padding(start = 6.dp),
-                    text = "차트 분석 확인하기",
+                    text = userDTO.name,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Text(
-                    modifier = Modifier.padding(start = 6.dp),
-                    text = "고도, 걸음, 페이스 측정",
-                    fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
