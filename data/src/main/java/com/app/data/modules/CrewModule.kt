@@ -1,7 +1,7 @@
 package com.app.data.modules
 
 import com.app.data.repository.crew.CrewRepositoryImpl
-import com.app.domain.repository.crew.CrewRepository
+import com.app.domain.repository.CrewRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

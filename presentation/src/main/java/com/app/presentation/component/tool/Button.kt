@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -28,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.app.domain.model.calcul.FormatImpl
 import com.app.domain.model.dto.ActivateDTO
 import com.app.domain.model.dto.ChallengeDTO
 import com.app.domain.model.location.Coordinate
@@ -38,6 +40,7 @@ import com.app.domain.model.enum.ButtonType
 import com.app.domain.model.enum.VoiceType
 import com.app.domain.model.state.ChallengeMaster
 import com.app.domain.model.state.CrewMaster
+import com.app.domain.model.state.Voice
 import com.app.presentation.ui.main.home.HomeActivity
 import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.ChallengeViewModel
@@ -52,6 +55,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CustomButton(
     type: ButtonType,
@@ -74,14 +78,12 @@ fun CustomButton(
     challengeViewModel: ChallengeViewModel = hiltViewModel(),
     userViewModel: UserViewModel = hiltViewModel(),
     crewViewModel: CrewViewModel = hiltViewModel(),
-    stateViewModel: StateViewModel = StateViewModel(),
+    stateViewModel: StateViewModel = hiltViewModel(),
     ttsViewModel: TTSViewModel = hiltViewModel()
 ) {
     val activates = activityLocationViewModel.activates.collectAsState()
-    val activatesForm = activityLocationViewModel.activatesForm.collectAsState()
 
     val crew = crewViewModel.crew.collectAsState()
-
 
     val googleId = userViewModel.getSavedLoginState()
     val username = userViewModel.getSavedLoginName()
@@ -108,12 +110,6 @@ fun CustomButton(
                 ButtonType.EventStatus.ROUTE -> {
                     onClick(true)
                 }
-                ButtonType.EventStatus.DARKTHEME -> {
-                    /**
-                     * 클릭 시, 테마가 바뀐다./
-                     */
-                    stateViewModel.toggleTheme()
-                }
                 ButtonType.PermissionStatus.USERCANCEL -> {
                     onNavigateToCheck(false)
                 }
@@ -132,16 +128,24 @@ fun CustomButton(
                         longitude = cameraPositionState.position.target.longitude
                     )
                 }
+                ButtonType.UserStatus.DELETE -> {
+                    userViewModel.deleteAccount()
+                }
                 else -> {
                     when (type) {
                         ButtonType.RunningStatus.FINISH -> {
                             if (sensorManagerViewModel.getSavedSensorState() < 100) {
+                                ttsViewModel.speak(
+                                    "운동이 종료되었습니다. 통계: ${sensorManagerViewModel.getSavedSensorState()}보, ${FormatImpl("YY:MM:DD:H").getSpeakTime(activates.value.time)} 입니다."
+                                )
+
                                 sensorManagerViewModel.stopService(
                                     runningStatus = true,
                                     isRunning = false
                                 )
                                 locationManagerViewModel.stopService()
                                 sensorManagerViewModel.stopWatch()
+
                             } else {
                                 Toast.makeText(context, "최소 100보 이상은 걸어야 합니다!", Toast.LENGTH_SHORT).show()
                             }
@@ -172,7 +176,7 @@ fun CustomButton(
                         ButtonType.RunningStatus.DeleteStatus.RUNNING -> {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 activityLocationViewModel.deleteActivityFindById(
-                                    googleId = activateData!!.value[0].googleId,
+                                    googleId = activateData!!.value[0].userId,
                                     date = activateData.value[0].todayFormat
                                 ) {
                                     if (it) {
@@ -220,11 +224,20 @@ fun CustomButton(
                             }
                         }
 
+                        ButtonType.VoiceStatus.INSERT -> {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                ttsViewModel.insert(data as Voice)
+                            }
+                        }
+
                         else -> {
                             locationManagerViewModel.startService()
                             sensorManagerViewModel.startService(true)
                             sensorManagerViewModel.startWatch()
-                            ttsViewModel.speak("운동을 시작합니다! 활동 종류는 ${activates.value.activateName}, 활동 형태는 ${activatesForm.value.name}입니다!", VoiceType.FEMALE)
+
+                            ttsViewModel.speak(
+                                "운동을 시작합니다!"
+                            )
                         }
                     }
                 }

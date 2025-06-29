@@ -8,7 +8,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import androidx.core.app.NotificationCompat
 import com.app.data.R
-import com.app.domain.repository.sensor.SensorRepository
+import com.app.domain.repository.SensorRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

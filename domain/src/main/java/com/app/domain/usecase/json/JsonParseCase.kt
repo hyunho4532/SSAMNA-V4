@@ -1,7 +1,7 @@
 package com.app.domain.usecase.json
 
 import com.app.domain.model.state.ActivityType
-import com.app.domain.repository.json.JsonParsingRepository
+import com.app.domain.repository.JsonParsingRepository
 import javax.inject.Inject
 
 class JsonParseCase @Inject constructor(

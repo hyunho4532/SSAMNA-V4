@@ -19,6 +19,6 @@ data class User(
     val recentWalkingOfWeek: String = "",
     val recentWalkingOfTime: String = "",
 
-    val targetPeriod: String = "네",
-    val isSmartWatch: String = "네"
+    val targetPeriod: String = "",
+    val isSmartWatch: String = ""
 )

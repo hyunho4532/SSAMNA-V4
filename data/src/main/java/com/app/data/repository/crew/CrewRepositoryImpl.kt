@@ -4,7 +4,7 @@ import com.app.domain.model.dto.ActivateNotificationDTO
 import com.app.domain.model.dto.CrewDTO
 import com.app.domain.model.state.CrewMaster
 import com.app.domain.model.state.Ranking
-import com.app.domain.repository.crew.CrewRepository
+import com.app.domain.repository.CrewRepository
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.rpc
 import kotlinx.coroutines.Dispatchers

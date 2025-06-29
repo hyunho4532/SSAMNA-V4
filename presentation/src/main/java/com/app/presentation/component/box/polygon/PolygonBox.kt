@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.graphics.shapes.CornerRounding
 import androidx.graphics.shapes.RoundedPolygon
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.presentation.viewmodel.StateViewModel
 
 /**
@@ -32,7 +33,7 @@ fun <T> PolygonBox(
     height: Dp = 90.dp,
     title: String,
     data: T,
-    stateViewModel: StateViewModel = StateViewModel()
+    stateViewModel: StateViewModel = hiltViewModel()
 ) {
     val hexagon = remember {
         RoundedPolygon(

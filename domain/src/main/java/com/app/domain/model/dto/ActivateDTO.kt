@@ -11,8 +11,8 @@ data class ActivateDTO(
     @SerialName("id")
     val id: Int = 0,
 
-    @SerialName("google_id")
-    val googleId: String = "",
+    @SerialName("user_id")
+    val userId: String = "",
 
     @SerialName("title")
     val title: String = "",

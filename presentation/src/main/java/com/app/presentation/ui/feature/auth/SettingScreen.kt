@@ -1,5 +1,6 @@
 package com.app.presentation.ui.feature.auth
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -13,11 +14,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,8 +45,11 @@ import com.app.domain.model.enum.ButtonType
 import com.app.domain.model.enum.VoiceType
 import com.app.domain.model.user.User
 import com.app.presentation.R
+import com.app.presentation.component.dialog.ShowAccountDeleteDialog
+import com.app.presentation.component.dialog.UserUpdateBottomSheet
 import com.app.presentation.component.tool.CustomButton
 import com.app.presentation.component.tool.Spacer
+import com.app.presentation.component.util.Const
 import com.app.presentation.component.util.responsive.setUpWidth
 import com.app.presentation.viewmodel.StateViewModel
 import com.app.presentation.viewmodel.TTSViewModel
@@ -43,12 +57,41 @@ import com.app.presentation.viewmodel.TTSViewModel
 /**
  * 사용자 설정 화면
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
     user: User,
     stateViewModel: StateViewModel,
     ttsViewModel: TTSViewModel = hiltViewModel()
 ) {
+    val (selectedOption, onOptionSelected) = remember {
+        mutableStateOf(Const().gender[0])
+    }
+
+    val (timeSelected, setTimeSelected) = remember {
+        mutableStateOf(Const().time[0])
+    }
+
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false
+    )
+
+    /**
+     * 내 정보 수정 시 팝업 창 상태
+     */
+    val isInfoUser = remember {
+        mutableStateOf(false)
+    }
+
+    /**
+     * 계정 탈퇴 팝업 창 상태
+     */
+    val isDeleteAccount = remember {
+        mutableStateOf(false)
+    }
+
+    val voice = ttsViewModel.voice.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,15 +101,22 @@ fun SettingScreen(
         Text(
             text = user.name,
             fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
         )
 
-        Spacer(width = 0.dp, height = 30.dp)
+        Spacer(
+            width = 0.dp,
+            height = 30.dp
+        )
 
         Card(
             modifier = Modifier
                 .width(setUpWidth())
-                .height(48.dp),
+                .height(48.dp)
+                .clickable {
+                    stateViewModel.toggleTheme()
+                },
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         ) {
             Row(
@@ -77,8 +127,9 @@ fun SettingScreen(
                 Text(
                     modifier = Modifier
                         .padding(start = 6.dp),
-                    text = "로그아웃",
-                    fontWeight = FontWeight.Bold
+                    text = "다크 모드",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Image(
@@ -99,68 +150,138 @@ fun SettingScreen(
         Card(
             modifier = Modifier
                 .width(setUpWidth())
-                .height(200.dp),
+                .height(260.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         ) {
             Column(
                 modifier = Modifier
-                    .padding(top = 6.dp, start = 6.dp)
+                    .padding(horizontal = 16.dp)
+                    .selectableGroup()
             ) {
-                Text(
-                    text = "TTS 목소리를 선택해주세요!",
-                    fontWeight = FontWeight.Bold
-                )
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "남자",
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Image(
+                    Const().gender.forEach { text ->
+                        Box(
                             modifier = Modifier
-                                .size(120.dp)
-                                .clickable {
-                                    ttsViewModel.speak(
-                                        "안녕하세요! 저와 함께해요!",
-                                        VoiceType.MALE
-                                    )
-                                },
-                            painter = painterResource(R.drawable.tts_man),
-                            contentDescription = "남자 TTS 캐릭터"
-                        )
-                    }
+                                .height(120.dp)
+                                .selectable(
+                                    selected = (text == selectedOption),
+                                    onClick = {
+                                        val voiceType = when (text) {
+                                            "남자" -> VoiceType.MALE
+                                            else -> VoiceType.FEMALE
+                                        }
 
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "여자",
-                            fontWeight = FontWeight.Bold
-                        )
+                                        onOptionSelected(text)
+                                        ttsViewModel.preview(
+                                            text = "안녕하세요! 저와 함께해요!",
+                                            type = voiceType
+                                        )
+                                    }
+                                )
+                                .padding(vertical = 8.dp),
+                        ) {
+                            RadioButton(
+                                selected = (text == selectedOption),
+                                onClick = null,
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Color(0xFF2377f9)
+                                )
+                            )
 
-                        Image(
-                            modifier = Modifier
-                                .size(120.dp)
-                                .clickable {
-                                    ttsViewModel.speak(
-                                        "안녕하세요! 저와 함께해요!",
-                                        VoiceType.FEMALE
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = text,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+
+                                if (text == "남자") {
+                                    Image(
+                                        modifier = Modifier
+                                            .size(120.dp),
+                                        painter = painterResource(R.drawable.tts_man),
+                                        contentDescription = "남자 TTS 캐릭터"
                                     )
-                                },
-                            painter = painterResource(R.drawable.tts_human),
-                            contentDescription = "여자 TTS 캐릭터"
-                        )
+                                } else {
+                                    Image(
+                                        modifier = Modifier
+                                            .size(120.dp),
+                                        painter = painterResource(R.drawable.tts_human),
+                                        contentDescription = "여자 TTS 캐릭터"
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
+
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .selectableGroup()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        Const().time.forEach { text ->
+                            Box(
+                                modifier = Modifier
+                                    .height(62.dp)
+                                    .selectable(
+                                        selected = (text == timeSelected),
+                                        onClick = {
+                                            setTimeSelected(text)
+                                            ttsViewModel.time(text)
+                                        }
+                                    )
+                                    .padding(vertical = 8.dp),
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(start = 12.dp)
+                                ) {
+                                    RadioButton(
+                                        selected = (text == timeSelected),
+                                        onClick = null,
+                                        colors = RadioButtonDefaults.colors(
+                                            selectedColor = Color(0xFF2377f9)
+                                        )
+                                    )
+                                }
+
+                                Column(
+                                    modifier = Modifier
+                                        .padding(top = 24.dp)
+                                ) {
+                                    Text(
+                                        text = text,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                CustomButton(
+                    type = ButtonType.VoiceStatus.INSERT,
+                    width = setUpWidth(),
+                    height = 38.dp,
+                    text = "목소리 등록하기 (땀나와 함께!)",
+                    shape = "Rectangle",
+                    data = voice.value,
+                    stateViewModel = stateViewModel
+                )
             }
         }
 
@@ -169,15 +290,50 @@ fun SettingScreen(
             height = 30.dp
         )
 
-        CustomButton(
-            type = ButtonType.EventStatus.DARKTHEME,
-            width = setUpWidth(),
-            height = 46.dp,
-            text = "다크 모드 활성화",
-            showIcon = true,
-            shape = "Rectangle",
-            stateViewModel = stateViewModel
-        )
+        Card(
+            modifier = Modifier
+                .width(setUpWidth())
+                .height(48.dp)
+                .clickable {
+                    isDeleteAccount.value = true
+                },
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 6.dp),
+                    text = "계정 탈퇴",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Red
+                )
 
+                Image(
+                    modifier = Modifier
+                        .size(28.dp),
+                    painter = painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
+                    contentDescription = "활동 아이콘",
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                )
+            }
+        }
+    }
+
+    if (isInfoUser.value) {
+        UserUpdateBottomSheet(
+            showBottomSheet = isInfoUser,
+            sheetState = sheetState,
+            user = user
+        )
+    }
+
+    if (isDeleteAccount.value) {
+        ShowAccountDeleteDialog(
+            isDeleteAccount = isDeleteAccount
+        )
     }
 }

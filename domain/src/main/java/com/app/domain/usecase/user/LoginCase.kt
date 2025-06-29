@@ -2,7 +2,7 @@ package com.app.domain.usecase.user
 
 import com.app.domain.model.user.User
 import com.app.domain.model.user.UserDTO
-import com.app.domain.repository.user.AuthenticationRepository
+import com.app.domain.repository.AuthenticationRepository
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
 import javax.inject.Inject
@@ -24,6 +24,15 @@ class LoginCase @Inject constructor(
 
     suspend fun selectUserFindById(googleId: String) : UserDTO {
         return authenticationRepository.selectUserFindById(googleId)
+    }
+
+    /**
+     * 계정 탈퇴
+     */
+    suspend fun deleteAccount(googleId: String, onResult: (Boolean) -> Unit) {
+        return authenticationRepository.deleteAccount(googleId) { result ->
+            onResult(result)
+        }
     }
 
     suspend fun updateProfileUrl(googleId: String, profileUrl: String) {

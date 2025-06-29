@@ -1,9 +1,8 @@
 package com.app.data.repository.activate
 
-import android.util.Log
 import com.app.domain.model.dto.ActivateDTO
 import com.app.domain.model.dto.ActivateNotificationDTO
-import com.app.domain.repository.activate.ActivateRepository
+import com.app.domain.repository.ActivateRepository
 import io.github.jan.supabase.postgrest.Postgrest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -25,7 +24,7 @@ class ActivateRepositoryImpl @Inject constructor(
     override suspend fun delete(googleId: String, date: String, onSuccess: (Boolean) -> Unit) {
         postgrest.from("Activate").delete {
             filter {
-                eq("google_id", googleId)
+                eq("user_id", googleId)
                 eq("today_format", date)
             }
         }
@@ -37,7 +36,7 @@ class ActivateRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             postgrest.from("Activate").select {
                 filter {
-                    eq("google_id", googleId)
+                    eq("user_id", googleId)
                 }
             }.decodeList<ActivateDTO>()
         }
@@ -47,7 +46,7 @@ class ActivateRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             postgrest.from("Activate").select {
                 filter {
-                    eq("google_id", googleId)
+                    eq("user_id", googleId)
                     eq("eq_date", date)
                 }
             }.decodeList<ActivateDTO>()

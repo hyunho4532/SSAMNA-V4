@@ -5,7 +5,9 @@ import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.domain.model.state.Voice
 import com.app.domain.model.user.User
+import com.app.domain.usecase.tts.TTSCase
 import com.app.domain.usecase.user.LoginCase
 import com.app.presentation.ui.main.home.HomeActivity
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -21,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val loginCase: LoginCase,
+    private val ttsCase: TTSCase,
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {
 
@@ -132,13 +135,15 @@ class UserViewModel @Inject constructor(
     }
 
     /** 최종적으로 정보 확인 후 데이터베이스에 저장 **/
-    fun saveUser(userState: User) {
-        Log.d("UserViewModel", userState.id + userState.name)
-
+    fun saveUser(userState: User, voice: Voice) {
         saveLoginState(userState.id, userState.name)
 
         viewModelScope.launch {
+            /**
+             * 사용자를 등록하고, Voice(목소리)를 등록한다.
+             */
             loginCase.saveUser(userState)
+            ttsCase.insert(voice)
         }
     }
 
@@ -159,6 +164,18 @@ class UserViewModel @Inject constructor(
                     recentExerciseCheck = user.recentExerciseCheck,
                     targetPeriod = user.targetPeriod
                 )
+            }
+        }
+    }
+
+    fun deleteAccount() {
+        val googleId = sharedPreferences.getString("id", "")
+
+        viewModelScope.launch {
+            loginCase.deleteAccount(googleId!!) { result ->
+                if (result) {
+
+                }
             }
         }
     }

@@ -23,8 +23,7 @@ fun RadioRow(
     id: Number,
     selectedOption: String,
     onOptionSelected: (String) -> Unit,
-    userViewModel: UserViewModel = hiltViewModel(),
-    userState: State<User>
+    userViewModel: UserViewModel = hiltViewModel()
 ) {
 
     Row {
@@ -32,7 +31,7 @@ fun RadioRow(
             Row (
                 modifier = Modifier
                     .width(120.dp)
-                    .padding(top = 28.dp, start = 12.dp)
+                    .padding(top = 16.dp, start = 12.dp)
                     .selectable(
                         selected = (text == selectedOption),
                         onClick = {

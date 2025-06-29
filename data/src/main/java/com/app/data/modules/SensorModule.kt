@@ -1,7 +1,7 @@
 package com.app.data.modules
 
 import com.app.data.repository.sensor.SensorRepositoryImpl
-import com.app.domain.repository.sensor.SensorRepository
+import com.app.domain.repository.SensorRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

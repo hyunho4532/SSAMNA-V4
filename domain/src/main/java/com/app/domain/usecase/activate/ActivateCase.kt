@@ -1,9 +1,8 @@
 package com.app.domain.usecase.activate
 
-import android.util.Log
 import com.app.domain.model.dto.ActivateDTO
 import com.app.domain.model.dto.ActivateNotificationDTO
-import com.app.domain.repository.activate.ActivateRepository
+import com.app.domain.repository.ActivateRepository
 import javax.inject.Inject
 
 class ActivateCase @Inject constructor(

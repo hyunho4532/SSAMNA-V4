@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.app.domain.model.dto.CrewDTO
 import com.app.domain.model.location.Coordinate
+import com.app.domain.model.state.Voice
 import com.app.domain.model.user.User
 import com.app.presentation.animation.Screens
 import com.app.presentation.ui.feature.login.LoginScreen
@@ -35,6 +36,7 @@ import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.JsonParseViewModel
 import com.app.presentation.viewmodel.StateViewModel
 import com.app.presentation.viewmodel.UserViewModel
+import com.google.accompanist.pager.PagerState
 import com.google.android.gms.location.LocationServices
 import io.github.jan.supabase.gotrue.user.UserInfo
 import kotlinx.serialization.json.Json
@@ -64,23 +66,8 @@ fun AppNavHost() {
 
             UserInfoScreen(
                 navController = navController,
-                user = user,
-                context = context
+                user = user
             )
-        }
-
-        composable(
-            route = "report?userState={userState}",
-            arguments = listOf(
-                navArgument("userState") {
-                    type = NavType.StringType
-                }
-            )
-        ) { backStackEntry ->
-            val userStateJson = backStackEntry.arguments?.getString("userState")
-            val userState = Json.decodeFromString<User>(userStateJson!!)
-
-            ReportScreen(userState)
         }
     }
 }
@@ -211,7 +198,8 @@ fun ScreenNavigationConfiguration(
 
         composable("report") {
             ReportScreen(
-                userState = User()
+                userState = User(),
+                voiceState = Voice()
             )
         }
     }

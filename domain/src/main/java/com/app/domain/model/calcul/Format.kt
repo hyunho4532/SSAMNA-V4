@@ -9,4 +9,5 @@ sealed class Format {
     abstract fun parseMonthDaysStr(dateStr: String): String
     abstract fun parseMonthDaysDate(dateStr: String): LocalDate
     abstract fun getFormatTime(time: Long): String
+    abstract fun getSpeakTime(time: Long): String
 }

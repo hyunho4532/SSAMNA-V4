@@ -27,12 +27,20 @@ sealed class ButtonType {
         }
     }
 
+    sealed class UserStatus: ButtonType() {
+        data object DELETE: UserStatus()
+    }
+
     sealed class HistoryStatus: ButtonType() {
         data object OPEN: RunningStatus()
     }
 
     sealed class MarkerStatus: ButtonType() {
         data object FINISH: MarkerStatus()
+    }
+
+    sealed class VoiceStatus: ButtonType() {
+        data object INSERT: VoiceStatus()
     }
 
     sealed class CrewStatus: ButtonType() {

@@ -3,7 +3,7 @@ package com.app.data.repository.auth
 import android.util.Log
 import com.app.domain.model.user.User
 import com.app.domain.model.user.UserDTO
-import com.app.domain.repository.user.AuthenticationRepository
+import com.app.domain.repository.AuthenticationRepository
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
@@ -25,7 +25,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
         val isValidateUser = postgrest.from("User")
             .select {
                 filter {
-                    eq("google_id", task?.result?.id.toString())
+                    eq("user_id", task?.result?.id.toString())
                 }
             }.decodeSingleOrNull<UserDTO>()
 
@@ -53,7 +53,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
 
     override suspend fun saveUser(user: User) {
         val userDTO = UserDTO(
-            googleId = user.id,
+            userId = user.id,
             email = user.email,
             name = user.name,
             age = user.age.toInt(),
@@ -68,11 +68,23 @@ class AuthenticationRepositoryImpl @Inject constructor(
         postgrest.from("User").insert(userDTO)
     }
 
+    override suspend fun deleteAccount(googleId: String, onSuccess: (Boolean) -> Unit) {
+        return withContext(Dispatchers.IO) {
+            val params = buildJsonObject {
+                put("p_user_id", JsonPrimitive(googleId))
+            }
+
+            postgrest.rpc("delete_account", params)
+
+            onSuccess(true)
+        }
+    }
+
     override suspend fun selectUserFindById(googleId: String) : UserDTO {
         return withContext(Dispatchers.IO) {
             postgrest.from("User").select {
                 filter {
-                    eq("google_id", googleId)
+                    eq("user_id", googleId)
                 }
             }.decodeSingle<UserDTO>()
         }

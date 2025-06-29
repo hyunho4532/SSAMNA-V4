@@ -3,7 +3,7 @@ package com.app.data.repository.challenge
 import com.app.domain.model.dto.ChallengeDTO
 import com.app.domain.model.state.ChallengeMaster
 import com.app.domain.model.state.ChallengeSub
-import com.app.domain.repository.challenge.ChallengeRepository
+import com.app.domain.repository.ChallengeRepository
 import io.github.jan.supabase.postgrest.Postgrest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -36,7 +36,7 @@ class ChallengeRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             postgrest.from("ChallengeSub").select {
                 filter {
-                    eq("google_id", googleId)
+                    eq("user_id", googleId)
                 }
             }.decodeList<ChallengeDTO>()
         }

@@ -13,14 +13,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -33,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,6 +50,9 @@ import com.app.presentation.component.tool.challengeCard
 import com.app.domain.model.enum.CardType
 import com.app.domain.model.state.ChallengeMaster
 import com.app.domain.model.state.ChallengeSub
+import com.app.domain.model.user.User
+import com.app.presentation.R
+import com.app.presentation.component.tool.Spacer
 import com.app.presentation.component.util.responsive.setUpWidth
 import com.app.presentation.viewmodel.JsonParseViewModel
 import com.app.presentation.viewmodel.StateViewModel
@@ -299,6 +307,74 @@ fun ActivateDetailBottomSheet(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UserUpdateBottomSheet(
+    showBottomSheet: MutableState<Boolean>,
+    sheetState: SheetState,
+    user: User
+) {
+    if (showBottomSheet.value) {
+        ModalBottomSheet(
+            modifier = Modifier
+                .fillMaxSize(),
+            sheetState = sheetState,
+            onDismissRequest = { showBottomSheet.value = false },
+            containerColor = MaterialTheme.colorScheme.surface
+        ) {
+            Column (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .width(setUpWidth())
+                        .height(56.dp),
+                    value = "",
+                    onValueChange = {
+
+                    },
+                    singleLine = true,
+                    placeholder = {
+                        Text(
+                            text = user.name,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = MaterialTheme.colorScheme.onSurface
+                    )
+                )
+
+                Spacer(
+                    width = 0.dp,
+                    height = 30.dp
+                )
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .width(setUpWidth())
+                        .height(56.dp),
+                    value = "",
+                    onValueChange = {
+
+                    },
+                    singleLine = true,
+                    placeholder = {
+                        Text(
+                            text = user.email,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = MaterialTheme.colorScheme.onSurface
+                    )
+                )
             }
         }
     }
