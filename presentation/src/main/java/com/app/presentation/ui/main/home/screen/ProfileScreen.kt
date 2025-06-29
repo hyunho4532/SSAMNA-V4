@@ -256,6 +256,16 @@ fun ProfileScreen(
                     },
                     tint = MaterialTheme.colorScheme.onSurface
                 )
+
+                Icon(
+                    Icons.Filled.Settings,
+                    contentDescription = "대결 조회 아이콘",
+                    modifier = Modifier.clickable {
+                        val userJson = Json.encodeToString(userList.value)
+                        navController.navigate("settings/$userJson")
+                    },
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
             }
         }
 

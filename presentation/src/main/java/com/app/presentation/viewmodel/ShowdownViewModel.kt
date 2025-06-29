@@ -24,8 +24,8 @@ class ShowdownViewModel @Inject constructor(
             val user = loginCase.selectUserFindById(userId)
 
             val showdownInviteDTO = ShowdownInviteDTO(
-                userId = userId,
-                otherId = data.userId,
+                userId = data.userId,
+                otherId = userId,
                 message = "${user.name}님이 대결을 신청했습니다!"
             )
 
