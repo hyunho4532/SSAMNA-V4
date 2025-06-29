@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.domain.model.state.Voice
 import com.app.domain.model.user.User
+import com.app.domain.model.user.UserDTO
 import com.app.domain.usecase.tts.TTSCase
 import com.app.domain.usecase.user.LoginCase
 import com.app.presentation.ui.main.home.HomeActivity
@@ -145,6 +146,10 @@ class UserViewModel @Inject constructor(
             loginCase.saveUser(userState)
             ttsCase.insert(voice)
         }
+    }
+
+    suspend fun selectUserAll() : List<UserDTO> {
+        return loginCase.selectUserAll()
     }
 
     fun selectUserFindById(googleId: String) {

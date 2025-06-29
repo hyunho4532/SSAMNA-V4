@@ -1,5 +1,7 @@
 package com.app.presentation.ui.feature.activate.detail
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,6 +52,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.double
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ActivateDetailScreen(
     id: String,

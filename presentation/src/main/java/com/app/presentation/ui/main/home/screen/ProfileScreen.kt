@@ -337,7 +337,18 @@ fun ProfileScreen(
         Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 60.dp, end = 18.dp),
+                .padding(top = 60.dp, end = 18.dp)
+                .clickable(
+                    interactionSource = remember {
+                        MutableInteractionSource()
+                    },
+                    indication = rememberRipple(
+                        color = Color.Gray,
+                        bounded = true
+                    )
+                ) {
+                    navController.navigate("showdownAuth")
+                },
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(

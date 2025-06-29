@@ -80,6 +80,12 @@ class AuthenticationRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun selectUserAll(): List<UserDTO> {
+        return withContext(Dispatchers.IO) {
+            postgrest.from("User").select().decodeList<UserDTO>()
+        }
+    }
+
     override suspend fun selectUserFindById(googleId: String) : UserDTO {
         return withContext(Dispatchers.IO) {
             postgrest.from("User").select {

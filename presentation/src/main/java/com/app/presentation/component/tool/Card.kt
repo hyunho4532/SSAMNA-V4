@@ -791,3 +791,60 @@ fun chartDetailCard(
         }
     }
 }
+
+/**
+ * 대결할 상태 카드 조회
+ */
+@Composable
+fun showdownAuthCard(
+    height: Dp,
+    navController: NavController = rememberNavController()
+) {
+    Card (
+        modifier = Modifier
+            .width(setUpWidth())
+            .height(height)
+            .clickable(
+                interactionSource = remember {
+                    MutableInteractionSource()
+                },
+                indication = rememberRipple(
+                    color = Color.Gray,
+                    bounded = true
+                )
+            ) {
+
+            },
+        border = BorderStroke(1.dp, Color.Gray)
+    ) {
+        Row (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_graph_24),
+                contentDescription = "그래프 로고",
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+
+            Column {
+                Text(
+                    modifier = Modifier.padding(start = 6.dp),
+                    text = "차트 분석 확인하기",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Text(
+                    modifier = Modifier.padding(start = 6.dp),
+                    text = "고도, 걸음, 페이스 측정",
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
+    }
+}
