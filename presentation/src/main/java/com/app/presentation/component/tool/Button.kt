@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.height
@@ -136,7 +137,7 @@ fun CustomButton(
                         ButtonType.RunningStatus.FINISH -> {
                             if (sensorManagerViewModel.getSavedSensorState() < 100) {
                                 ttsViewModel.speak(
-                                    "운동이 종료되었습니다. 통계: ${sensorManagerViewModel.getSavedSensorState()}보, ${FormatImpl("YY:MM:DD:H").getSpeakTime(activates.value.time)} 입니다."
+                                    "운동이 종료되었습니다. 통계: ${sensorManagerViewModel.getSavedSensorState()}보, ${FormatImpl("YY:MM:DD:H").getSpeakTime(sensorManagerViewModel.getSavedTimeState())} 입니다."
                                 )
 
                                 sensorManagerViewModel.stopService(

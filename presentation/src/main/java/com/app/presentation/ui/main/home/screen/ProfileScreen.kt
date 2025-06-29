@@ -332,6 +332,33 @@ fun ProfileScreen(
         Spacer(width = 0.dp, height = 46.dp)
 
         /**
+         * 현재 사용자의 활동과 활동 갯수, 전체 활동 화면이 이동되는 아이콘을 조회한다.
+         */
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 60.dp, end = 18.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "대결 (0)",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Image(
+                modifier = Modifier
+                    .size(28.dp),
+                painter = painterResource(id = R.drawable.baseline_add_24),
+                contentDescription = "추가 아이콘",
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+            )
+        }
+
+        Spacer(width = 0.dp, height = 46.dp)
+
+        /**
          * 현재 사용자의 크루와 크루 갯수, 크루 등록 화면으로 이동되는 아이콘을 조회한다.
          */
         Row (
