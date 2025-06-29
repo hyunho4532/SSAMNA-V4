@@ -1,31 +1,35 @@
 package com.app.presentation.viewmodel
 
-import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.app.domain.model.dto.ShowdownInviteDTO
 import com.app.domain.model.user.UserDTO
+import com.app.domain.usecase.showdown.ShowdownCase
+import com.app.domain.usecase.user.LoginCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ShowdownViewModel @Inject constructor(
-    @ApplicationContext private val appContext: Context
+    private val loginCase: LoginCase,
+    private val showdownCase: ShowdownCase
 ) : ViewModel() {
     fun insert(
         userId: String,
         username: String,
         data: UserDTO
     ) {
-        Log.d("ShowdownViewModel", data.toString())
+        viewModelScope.launch {
+            val user = loginCase.selectUserFindById(userId)
 
-        val showdownInviteDTO = ShowdownInviteDTO(
-            userId = userId,
-            otherId = data.userId,
-            message = "${username}님이 대결을 신청했습니다!"
-        )
+            val showdownInviteDTO = ShowdownInviteDTO(
+                userId = userId,
+                otherId = data.userId,
+                message = "${user.name}님이 대결을 신청했습니다!"
+            )
 
-        Log.d("ShowdownViewModel", showdownInviteDTO.toString())
+            showdownCase.insert(showdownInviteDTO)
+        }
     }
 }
