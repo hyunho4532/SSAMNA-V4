@@ -134,6 +134,9 @@ fun CustomButton(
                 }
                 else -> {
                     when (type) {
+                        ButtonType.ShowdownStatus.INVITE -> {
+
+                        }
                         ButtonType.RunningStatus.FINISH -> {
                             if (sensorManagerViewModel.getSavedSensorState() < 100) {
                                 ttsViewModel.speak(

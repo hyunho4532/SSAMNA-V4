@@ -14,6 +14,10 @@ sealed class ButtonType {
         data object DARKTHEME: EventStatus()
     }
 
+    sealed class ShowdownStatus: ButtonType() {
+        data object INVITE : ShowdownStatus()
+    }
+
     sealed class RunningStatus: ButtonType() {
         data object FINISH : RunningStatus()
         data object OPEN: RunningStatus()

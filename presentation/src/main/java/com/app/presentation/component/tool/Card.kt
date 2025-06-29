@@ -2,9 +2,11 @@ package com.app.presentation.component.tool
 
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -61,6 +63,7 @@ import coil.compose.AsyncImage
 import com.app.domain.model.state.Activate
 import com.app.domain.model.dto.ActivateDTO
 import com.app.domain.model.dto.ChallengeDTO
+import com.app.domain.model.enum.ButtonType
 import com.app.domain.model.location.Coordinate
 import com.app.domain.model.state.ActivateForm
 import com.app.domain.model.user.User
@@ -795,8 +798,9 @@ fun chartDetailCard(
 }
 
 /**
- * 대결할 상태 카드 조회
+ * 대결할 상대 사용자 조회
  */
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun showdownAuthCard(
     height: Dp,
@@ -840,7 +844,12 @@ fun showdownAuthCard(
                 contentDescription = "땀나 기본 로고"
             )
 
-            Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(
                     modifier = Modifier.padding(start = 6.dp),
                     text = userDTO.name,
@@ -848,6 +857,19 @@ fun showdownAuthCard(
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.onSurface
                 )
+
+                Box(
+                    modifier = Modifier
+                        .padding(end = 6.dp)
+                ) {
+                    CustomButton(
+                        type = ButtonType.ShowdownStatus.INVITE,
+                        width = 92.dp,
+                        height = 32.dp,
+                        text = "초대",
+                        shape = "Rectangle"
+                    )
+                }
             }
         }
     }
