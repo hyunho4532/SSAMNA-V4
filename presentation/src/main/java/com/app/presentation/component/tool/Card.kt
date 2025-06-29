@@ -63,6 +63,7 @@ import coil.compose.AsyncImage
 import com.app.domain.model.state.Activate
 import com.app.domain.model.dto.ActivateDTO
 import com.app.domain.model.dto.ChallengeDTO
+import com.app.domain.model.dto.ShowdownInviteDTO
 import com.app.domain.model.enum.ButtonType
 import com.app.domain.model.location.Coordinate
 import com.app.domain.model.state.ActivateForm
@@ -873,6 +874,70 @@ fun showdownAuthCard(
                         dataIntent = { popup, data ->
                             onSuccess(popup, data)
                         }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun showdownCard(
+    height: Dp,
+    showdownInviteDTO: ShowdownInviteDTO,
+) {
+    Card (
+        modifier = Modifier
+            .padding(top = 8.dp, start = 4.dp, end = 4.dp)
+            .width(setUpWidth())
+            .height(height)
+            .shadow(
+                elevation = 6.dp,
+                ambientColor = Color.Gray,
+                spotColor = Color.Gray
+            )
+            .clickable(
+                interactionSource = remember {
+                    MutableInteractionSource()
+                },
+                indication = rememberRipple(
+                    color = Color.Gray,
+                    bounded = true
+                )
+            ) {
+
+            },
+        colors = CardDefaults.cardColors(
+            contentColor = Color.White
+        )
+    ) {
+        Row (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    modifier = Modifier.padding(start = 4.dp),
+                    text = showdownInviteDTO.message,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Box(
+                    modifier = Modifier
+                        .padding(end = 6.dp)
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.check),
+                        contentDescription = "대결 체크 아이콘"
                     )
                 }
             }

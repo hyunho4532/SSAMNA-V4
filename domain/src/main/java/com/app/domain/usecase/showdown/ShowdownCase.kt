@@ -10,4 +10,8 @@ class ShowdownCase @Inject constructor(
     suspend fun insert(showdownInviteDTO: ShowdownInviteDTO) {
         showdownRepository.insert(showdownInviteDTO)
     }
+
+    suspend fun select(userId: String): List<ShowdownInviteDTO> {
+        return showdownRepository.select(userId)
+    }
 }

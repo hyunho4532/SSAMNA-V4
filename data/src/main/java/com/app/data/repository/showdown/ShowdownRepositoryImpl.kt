@@ -15,4 +15,14 @@ class ShowdownRepositoryImpl @Inject constructor(
             postgrest.from("ShowdownInvite").insert(showdownInviteDTO)
         }
     }
+
+    override suspend fun select(userId: String): List<ShowdownInviteDTO> {
+        return withContext(Dispatchers.IO) {
+            postgrest.from("ShowdownInvite").select {
+                filter {
+                    eq("user_id", userId)
+                }
+            }.decodeList<ShowdownInviteDTO>()
+        }
+    }
 }

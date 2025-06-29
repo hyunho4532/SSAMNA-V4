@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +35,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,6 +49,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.app.domain.model.common.Code
 import com.app.domain.model.dto.ChallengeDTO
+import com.app.domain.model.dto.ShowdownInviteDTO
 import com.app.domain.model.location.Coordinate
 import com.app.domain.model.location.Location
 import com.app.presentation.R
@@ -61,6 +62,7 @@ import com.app.presentation.component.util.responsive.setUpWidth
 import com.app.domain.model.enum.ButtonType
 import com.app.domain.model.state.ChallengeMaster
 import com.app.domain.model.user.UserDTO
+import com.app.presentation.component.tool.showdownCard
 import com.app.presentation.component.util.DefaultSwitch
 import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.CommonCodeViewModel
@@ -70,7 +72,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
-import kotlinx.datetime.format.Padding
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -947,6 +948,50 @@ fun ShowdownInviteDialog(
                         text = "상대와 대결하기",
                         shape = "Rectangle",
                         data = data,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ShowdownDialog(
+    isShowdownPopup: MutableState<Boolean>,
+    showdownInvite: SnapshotStateList<ShowdownInviteDTO>
+) {
+    Dialog(
+        onDismissRequest = {
+            isShowdownPopup.value = false
+        }
+    ) {
+        Card(
+            modifier = Modifier
+                .width(420.dp)
+                .height(200.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White
+            )
+        ) {
+            Column (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        top = 14.dp,
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "서로 싸워라!",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+
+                showdownInvite.forEach { invite ->
+                    showdownCard(
+                        height = 40.dp,
+                        showdownInviteDTO = invite
                     )
                 }
             }

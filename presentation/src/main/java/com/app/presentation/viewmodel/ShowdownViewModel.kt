@@ -32,4 +32,10 @@ class ShowdownViewModel @Inject constructor(
             showdownCase.insert(showdownInviteDTO)
         }
     }
+
+    suspend fun select(
+        userId: String
+    ) : List<ShowdownInviteDTO> {
+        return showdownCase.select(userId)
+    }
 }

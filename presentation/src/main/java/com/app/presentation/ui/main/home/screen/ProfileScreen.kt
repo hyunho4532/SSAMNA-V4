@@ -59,6 +59,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.app.domain.model.dto.ShowdownInviteDTO
 import com.app.domain.model.entry.PolygonBoxItem
 import com.app.domain.model.user.User
 import com.app.presentation.R
@@ -73,9 +74,11 @@ import com.app.presentation.component.util.responsive.setUpWidth
 import com.app.domain.model.enum.CardType
 import com.app.domain.model.state.ChallengeMaster
 import com.app.presentation.component.admob.Banner
+import com.app.presentation.component.dialog.ShowdownDialog
 import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.ChallengeViewModel
 import com.app.presentation.viewmodel.CrewViewModel
+import com.app.presentation.viewmodel.ShowdownViewModel
 import com.app.presentation.viewmodel.StateViewModel
 import com.app.presentation.viewmodel.UserViewModel
 import com.google.gson.Gson
@@ -94,6 +97,7 @@ fun ProfileScreen(
     challengeViewModel: ChallengeViewModel = hiltViewModel(),
     crewViewModel: CrewViewModel = hiltViewModel(),
     userViewModel: UserViewModel = hiltViewModel(),
+    showdownViewModel: ShowdownViewModel = hiltViewModel(),
     userList: State<User>,
     context: Context,
     stateViewModel: StateViewModel
@@ -140,6 +144,10 @@ fun ProfileScreen(
         mutableStateListOf<ChallengeMaster>()
     }
 
+    val showdownInvite = remember {
+        mutableStateListOf<ShowdownInviteDTO>()
+    }
+
     var sumCount by remember {
         mutableIntStateOf(0)
     }
@@ -160,17 +168,28 @@ fun ProfileScreen(
         mutableStateOf(false)
     }
 
+    /**
+     * 대결 신청 팝업
+     */
+    val showdownDialogPopup = remember {
+        mutableStateOf(false)
+    }
+
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
 
     LaunchedEffect(key1 = Unit) {
         val challengeMasterAll = challengeViewModel.selectChallengeAll()
+        challengeMaster.addAll(challengeMasterAll)
+
+        val showdownInviteMaster = showdownViewModel.select(userId = googleId)
+        showdownInvite.addAll(showdownInviteMaster)
 
         selectedImageUri = userViewModel.selectProfileUrl(googleId)?.toUri()
 
         activityLocationViewModel.selectActivityFindByGoogleId(userList.value.id)
-        challengeMaster.addAll(challengeMasterAll)
+
         challengeViewModel.selectChallengeByGoogleId(googleId = googleId)
         crewViewModel.crewFindById(googleId = googleId)
     }
@@ -257,14 +276,14 @@ fun ProfileScreen(
                     tint = MaterialTheme.colorScheme.onSurface
                 )
 
-                Icon(
+                Image(
                     painter = painterResource(R.drawable.showdown),
                     contentDescription = "대결 조회 아이콘",
-                    modifier = Modifier.clickable {
-                        val userJson = Json.encodeToString(userList.value)
-                        navController.navigate("settings/$userJson")
-                    },
-                    tint = MaterialTheme.colorScheme.onSurface
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clickable {
+                            showdownDialogPopup.value = true
+                        }
                 )
             }
         }
@@ -558,6 +577,13 @@ fun ProfileScreen(
                 sumCount = sumCount
             )
         }
+    }
+
+    if (showdownDialogPopup.value) {
+        ShowdownDialog(
+            isShowdownPopup = showdownDialogPopup,
+            showdownInvite = showdownInvite
+        )
     }
 
     if (showChallengeBottomSheet.value) {
