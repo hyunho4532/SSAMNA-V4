@@ -69,6 +69,7 @@ fun CustomButton(
     data: Any? = null,
     crewId: Int? = 0,
     onClick: (permissionPopup: Boolean) -> Unit = { },
+    dataIntent: (permissionPopup: Boolean, data: Any) -> Unit = { _, _ -> },
     @ApplicationContext context: Context = LocalContext.current,
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
     coordinate: List<Coordinate> = emptyList(),
@@ -135,7 +136,11 @@ fun CustomButton(
                 else -> {
                     when (type) {
                         ButtonType.ShowdownStatus.INVITE -> {
-
+                            /**
+                             * 클릭 시 다이얼로그 팝업이 조회된다.
+                             * 조회되기 전, 데이터를 먼저 전달 후, 팝업된다.
+                             */
+                            dataIntent(true, data!!)
                         }
                         ButtonType.RunningStatus.FINISH -> {
                             if (sensorManagerViewModel.getSavedSensorState() < 100) {

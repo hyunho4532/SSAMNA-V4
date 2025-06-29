@@ -11,11 +11,11 @@ sealed class ButtonType {
 
     sealed class EventStatus: ButtonType() {
         data object ROUTE: EventStatus()
-        data object DARKTHEME: EventStatus()
     }
 
     sealed class ShowdownStatus: ButtonType() {
         data object INVITE : ShowdownStatus()
+        data object INSERT : ShowdownStatus()
     }
 
     sealed class RunningStatus: ButtonType() {
@@ -33,10 +33,6 @@ sealed class ButtonType {
 
     sealed class UserStatus: ButtonType() {
         data object DELETE: UserStatus()
-    }
-
-    sealed class HistoryStatus: ButtonType() {
-        data object OPEN: RunningStatus()
     }
 
     sealed class MarkerStatus: ButtonType() {

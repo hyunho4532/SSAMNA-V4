@@ -804,7 +804,8 @@ fun chartDetailCard(
 @Composable
 fun showdownAuthCard(
     height: Dp,
-    userDTO: UserDTO
+    userDTO: UserDTO,
+    onSuccess: (Boolean, Any) -> Unit
 ) {
     Card (
         modifier = Modifier
@@ -863,11 +864,15 @@ fun showdownAuthCard(
                         .padding(end = 6.dp)
                 ) {
                     CustomButton(
+                        data = userDTO,
                         type = ButtonType.ShowdownStatus.INVITE,
                         width = 92.dp,
                         height = 32.dp,
                         text = "초대",
-                        shape = "Rectangle"
+                        shape = "Rectangle",
+                        dataIntent = { popup, data ->
+                            onSuccess(popup, data)
+                        }
                     )
                 }
             }

@@ -60,6 +60,7 @@ import com.app.presentation.component.util.responsive.setUpDialogWidth
 import com.app.presentation.component.util.responsive.setUpWidth
 import com.app.domain.model.enum.ButtonType
 import com.app.domain.model.state.ChallengeMaster
+import com.app.domain.model.user.UserDTO
 import com.app.presentation.component.util.DefaultSwitch
 import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.CommonCodeViewModel
@@ -889,6 +890,63 @@ fun ShowAccountDeleteDialog(
                         text = "계정 탈퇴하기",
                         showIcon = false,
                         shape = "Rectangle"
+                    )
+                }
+            }
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun ShowdownInviteDialog(
+    data: UserDTO,
+    isPopup: MutableState<Boolean>,
+    onPermissionUserCheck: (Boolean) -> Unit
+) {
+    Dialog(
+        onDismissRequest = {
+            isPopup.value = false
+        }
+    ) {
+        Card(
+            modifier = Modifier
+                .width(420.dp)
+                .height(120.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(top = 12.dp),
+                    text = "상대: ${data.name}",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = "해당 사용자와 대결하시겠습니까?",
+                    fontSize = 14.sp
+                )
+
+                Box(
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                ) {
+                    CustomButton(
+                        type = ButtonType.ShowdownStatus.INVITE,
+                        width = setUpWidth(),
+                        height = 38.dp,
+                        text = "상대와 대결하기",
+                        shape = "Rectangle",
+                        data = data,
                     )
                 }
             }

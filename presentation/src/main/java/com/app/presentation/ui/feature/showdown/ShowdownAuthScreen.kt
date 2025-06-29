@@ -7,14 +7,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.app.domain.model.state.ChallengeMaster
 import com.app.domain.model.user.UserDTO
+import com.app.presentation.component.dialog.PermissionDialog
+import com.app.presentation.component.dialog.ShowdownInviteDialog
 import com.app.presentation.component.tool.showdownAuthCard
 import com.app.presentation.viewmodel.UserViewModel
 
@@ -27,6 +29,14 @@ fun ShowdownAuthScreen(
 ) {
     val userListMaster = remember {
         mutableStateListOf<UserDTO>()
+    }
+
+    val userDetailMaster = remember {
+        mutableStateOf(UserDTO())
+    }
+
+    val isDialogPopup = remember {
+        mutableStateOf(false)
     }
 
     LaunchedEffect(key1 = Unit) {
@@ -49,11 +59,27 @@ fun ShowdownAuthScreen(
             fontSize = 14.sp,
         )
 
-        userListMaster.forEach { userDTO ->
+        userListMaster.forEach { userMaster ->
             showdownAuthCard(
                 height = 46.dp,
-                userDTO = userDTO
-            )
+                userDTO = userMaster
+            ) { popup, data ->
+                isDialogPopup.value = popup
+
+                if (data is UserDTO) {
+                    userDetailMaster.value = data
+                }
+            }
         }
+    }
+
+    if (isDialogPopup.value) {
+        ShowdownInviteDialog(
+            data = userDetailMaster.value,
+            isPopup = isDialogPopup,
+            onPermissionUserCheck = {
+
+            }
+        )
     }
 }
