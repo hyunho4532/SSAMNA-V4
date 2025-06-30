@@ -3,6 +3,8 @@ package com.app.presentation.component.tool
 import android.content.Context
 import android.net.Uri
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,6 +34,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,6 +44,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -75,8 +80,10 @@ import com.app.domain.model.state.ChallengeMaster
 import com.app.domain.model.user.UserDTO
 import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.JsonParseViewModel
+import com.app.presentation.viewmodel.ShowdownViewModel
 import com.app.presentation.viewmodel.StateViewModel
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.double
 import kotlinx.serialization.json.doubleOrNull
@@ -885,6 +892,7 @@ fun showdownAuthCard(
 fun showdownCard(
     height: Dp,
     showdownInviteDTO: ShowdownInviteDTO,
+    showdownViewModel: ShowdownViewModel = hiltViewModel()
 ) {
     Card (
         modifier = Modifier
@@ -895,18 +903,7 @@ fun showdownCard(
                 elevation = 6.dp,
                 ambientColor = Color.Gray,
                 spotColor = Color.Gray
-            )
-            .clickable(
-                interactionSource = remember {
-                    MutableInteractionSource()
-                },
-                indication = rememberRipple(
-                    color = Color.Gray,
-                    bounded = true
-                )
-            ) {
-
-            },
+            ),
         colors = CardDefaults.cardColors(
             contentColor = Color.White
         )
@@ -931,13 +928,47 @@ fun showdownCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
-                Box(
+                Row(
                     modifier = Modifier
-                        .padding(end = 6.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
                 ) {
                     Image(
+                        modifier = Modifier
+                            .clickable(
+                                interactionSource = remember {
+                                    MutableInteractionSource()
+                                },
+                                indication = rememberRipple(
+                                    color = Color.Gray,
+                                    bounded = true
+                                )
+                            ) {
+                                showdownViewModel.delete(showdownInviteDTO.id) {
+                                    if (it) {
+                                        Log.d("Card", "데이터 삭제 완료")
+                                    }
+                                }
+                            },
                         painter = painterResource(R.drawable.check),
-                        contentDescription = "대결 체크 아이콘"
+                        contentDescription = "대결 수락 아이콘"
+                    )
+
+                    Image(
+                        modifier = Modifier
+                            .clickable(
+                                interactionSource = remember {
+                                    MutableInteractionSource()
+                                },
+                                indication = rememberRipple(
+                                    color = Color.Gray,
+                                    bounded = true
+                                )
+                            ) {
+
+                            },
+                        painter = painterResource(R.drawable.not_check),
+                        contentDescription = "대결 거절 아이콘"
                     )
                 }
             }

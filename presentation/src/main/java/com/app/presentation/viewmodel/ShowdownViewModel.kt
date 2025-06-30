@@ -1,5 +1,6 @@
 package com.app.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.domain.model.dto.ShowdownInviteDTO
@@ -37,5 +38,16 @@ class ShowdownViewModel @Inject constructor(
         userId: String
     ) : List<ShowdownInviteDTO> {
         return showdownCase.select(userId)
+    }
+
+    fun delete(
+        id: Int,
+        onSuccess: (Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            showdownCase.delete(id) {
+                onSuccess(it)
+            }
+        }
     }
 }

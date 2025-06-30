@@ -14,4 +14,10 @@ class ShowdownCase @Inject constructor(
     suspend fun select(userId: String): List<ShowdownInviteDTO> {
         return showdownRepository.select(userId)
     }
+
+    suspend fun delete(id: Int, onSuccess: (Boolean) -> Unit) {
+        showdownRepository.delete(id) {
+            onSuccess(it)
+        }
+    }
 }
