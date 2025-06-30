@@ -944,7 +944,7 @@ fun showdownCard(
                                     bounded = true
                                 )
                             ) {
-                                showdownViewModel.delete(showdownInviteDTO.id) {
+                                showdownViewModel.delete(showdownInviteDTO) {
                                     if (it) {
                                         Log.d("Card", "데이터 삭제 완료")
                                     }

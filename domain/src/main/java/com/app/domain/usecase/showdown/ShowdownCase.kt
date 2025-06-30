@@ -1,5 +1,6 @@
 package com.app.domain.usecase.showdown
 
+import com.app.domain.model.dto.ShowdownDTO
 import com.app.domain.model.dto.ShowdownInviteDTO
 import com.app.domain.repository.ShowdownRepository
 import javax.inject.Inject
@@ -15,8 +16,12 @@ class ShowdownCase @Inject constructor(
         return showdownRepository.select(userId)
     }
 
-    suspend fun delete(id: Int, onSuccess: (Boolean) -> Unit) {
-        showdownRepository.delete(id) {
+    suspend fun showdownSelect(userId: String): List<ShowdownDTO> {
+        return showdownRepository.showdownSelect(userId)
+    }
+
+    suspend fun delete(showdownInviteDTO: ShowdownInviteDTO, onSuccess: (Boolean) -> Unit) {
+        showdownRepository.delete(showdownInviteDTO) {
             onSuccess(it)
         }
     }

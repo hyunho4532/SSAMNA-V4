@@ -59,6 +59,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.app.domain.model.dto.ShowdownDTO
 import com.app.domain.model.dto.ShowdownInviteDTO
 import com.app.domain.model.entry.PolygonBoxItem
 import com.app.domain.model.user.User
@@ -144,6 +145,10 @@ fun ProfileScreen(
         mutableStateListOf<ChallengeMaster>()
     }
 
+    val showdown = remember {
+        mutableStateListOf<ShowdownDTO>()
+    }
+
     val showdownInvite = remember {
         mutableStateListOf<ShowdownInviteDTO>()
     }
@@ -183,8 +188,17 @@ fun ProfileScreen(
         val challengeMasterAll = challengeViewModel.selectChallengeAll()
         challengeMaster.addAll(challengeMasterAll)
 
+        /**
+         * 대결 초대 관련 테이블에 있는 데이터를 조회한다.
+         */
         val showdownInviteMaster = showdownViewModel.select(userId = googleId)
         showdownInvite.addAll(showdownInviteMaster)
+
+        /**
+         * 대결 테이블에 있는 데이터를 조회한다.
+         */
+        val showdownMaster = showdownViewModel.showdownSelect(userId = googleId)
+        showdown.addAll(showdownMaster)
 
         selectedImageUri = userViewModel.selectProfileUrl(googleId)?.toUri()
 

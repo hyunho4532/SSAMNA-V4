@@ -1,8 +1,10 @@
 package com.app.presentation.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.domain.model.dto.ShowdownDTO
 import com.app.domain.model.dto.ShowdownInviteDTO
 import com.app.domain.model.user.UserDTO
 import com.app.domain.usecase.showdown.ShowdownCase
@@ -16,6 +18,9 @@ class ShowdownViewModel @Inject constructor(
     private val loginCase: LoginCase,
     private val showdownCase: ShowdownCase
 ) : ViewModel() {
+    private val _inviteList = mutableStateListOf<ShowdownInviteDTO>()
+    val inviteList: List<ShowdownInviteDTO> get() = _inviteList
+    
     fun insert(
         userId: String,
         username: String,
@@ -40,12 +45,18 @@ class ShowdownViewModel @Inject constructor(
         return showdownCase.select(userId)
     }
 
+    suspend fun showdownSelect(
+        userId: String
+    ) : List<ShowdownDTO> {
+        return showdownCase.showdownSelect(userId)
+    }
+
     fun delete(
-        id: Int,
+        showdownInviteDTO: ShowdownInviteDTO,
         onSuccess: (Boolean) -> Unit
     ) {
         viewModelScope.launch {
-            showdownCase.delete(id) {
+            showdownCase.delete(showdownInviteDTO) {
                 onSuccess(it)
             }
         }

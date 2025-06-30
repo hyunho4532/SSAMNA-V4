@@ -1,5 +1,6 @@
 package com.app.data.repository.showdown
 
+import com.app.domain.model.dto.ShowdownDTO
 import com.app.domain.model.dto.ShowdownInviteDTO
 import com.app.domain.repository.ShowdownRepository
 import io.github.jan.supabase.postgrest.Postgrest
@@ -29,13 +30,31 @@ class ShowdownRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun delete(id: Int, onSuccess: (Boolean) -> Unit) {
+    override suspend fun showdownSelect(userId: String): List<ShowdownDTO> {
+        return withContext(Dispatchers.IO) {
+            postgrest.from("Showdown").select {
+                filter {
+                    eq("user_id", userId)
+                    eq("other_id", userId)
+                }
+            }.decodeList<ShowdownDTO>()
+        }
+    }
+
+    override suspend fun delete(showdownInviteDTO: ShowdownInviteDTO, onSuccess: (Boolean) -> Unit) {
         return withContext(Dispatchers.IO) {
             val params = buildJsonObject {
-                put("pk_id", JsonPrimitive(id))
+                put("pk_id", JsonPrimitive(showdownInviteDTO.id))
             }
 
+            val showdownDTO = ShowdownDTO(
+                userId = showdownInviteDTO.userId,
+                otherId = showdownInviteDTO.otherId
+            )
+
             postgrest.rpc("delete_showdown_invite", params)
+            postgrest.from("Showdown").insert(showdownDTO)
+
             onSuccess(true)
         }
     }
