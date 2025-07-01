@@ -76,6 +76,7 @@ import com.app.domain.model.enum.CardType
 import com.app.domain.model.state.ChallengeMaster
 import com.app.presentation.component.admob.Banner
 import com.app.presentation.component.dialog.ShowdownDialog
+import com.app.presentation.component.tool.showdownSelectCard
 import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.ChallengeViewModel
 import com.app.presentation.viewmodel.CrewViewModel
@@ -408,6 +409,18 @@ fun ProfileScreen(
                 contentDescription = "추가 아이콘",
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
             )
+        }
+
+        /**
+         * 대결 내역을 조회한다.
+         */
+        Column {
+            showdown.forEach { sd ->
+                showdownSelectCard(
+                    height = 160.dp,
+                    data = sd
+                )
+            }
         }
 
         Spacer(width = 0.dp, height = 46.dp)

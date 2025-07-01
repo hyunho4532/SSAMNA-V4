@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 
 class AuthenticationRepositoryImpl @Inject constructor(
@@ -117,11 +118,25 @@ class AuthenticationRepositoryImpl @Inject constructor(
 
             val result = postgrest.rpc("get_profile_url", params)
 
-            Log.d("AuthenticationRepository", result.data)
-
             profileUrl = result.data
         }
 
         return profileUrl
+    }
+
+    override suspend fun getName(userId: String): String {
+        var name = ""
+
+        withContext(Dispatchers.IO) {
+            val params = buildJsonObject {
+                put("p_user_id", JsonPrimitive(userId))
+            }
+
+            val result = postgrest.rpc("get_profile_url", params)
+
+            name = result.data
+        }
+
+        return name
     }
 }

@@ -14,4 +14,5 @@ interface AuthenticationRepository {
     suspend fun selectUserFindById(googleId: String) : UserDTO
     suspend fun updateProfileUrl(googleId: String, profileUrl: String)
     suspend fun selectProfileUrl(googleId: String) : String
+    suspend fun getName(userId: String) : String
 }

@@ -68,6 +68,7 @@ import coil.compose.AsyncImage
 import com.app.domain.model.state.Activate
 import com.app.domain.model.dto.ActivateDTO
 import com.app.domain.model.dto.ChallengeDTO
+import com.app.domain.model.dto.ShowdownDTO
 import com.app.domain.model.dto.ShowdownInviteDTO
 import com.app.domain.model.enum.ButtonType
 import com.app.domain.model.location.Coordinate
@@ -973,5 +974,34 @@ fun showdownCard(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun showdownSelectCard(
+    height: Dp,
+    data: ShowdownDTO
+) {
+    Card(
+        modifier = Modifier
+            .width(setUpWidth())
+            .height(height)
+            .padding(top = 8.dp)
+            .clickable(
+                interactionSource = remember {
+                    MutableInteractionSource()
+                },
+                indication = rememberRipple(
+                    color = Color.Gray,
+                    bounded = true
+                )
+            ) {
+
+            },
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onSurface)
+    ) {
+        Text(
+            text = data.userId
+        )
     }
 }

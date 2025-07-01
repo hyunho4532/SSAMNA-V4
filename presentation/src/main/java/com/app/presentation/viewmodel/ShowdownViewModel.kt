@@ -56,7 +56,14 @@ class ShowdownViewModel @Inject constructor(
         onSuccess: (Boolean) -> Unit
     ) {
         viewModelScope.launch {
-            showdownCase.delete(showdownInviteDTO) {
+            /**
+             * user: 현재 사용자
+             * other: 현재 사용자한테 대결 승인을 보낸 사용자 (대결자)
+             */
+            val user = loginCase.selectName(showdownInviteDTO.userId)
+            val other = loginCase.selectName(showdownInviteDTO.otherId)
+
+            showdownCase.delete(showdownInviteDTO, user, other) {
                 onSuccess(it)
             }
         }
