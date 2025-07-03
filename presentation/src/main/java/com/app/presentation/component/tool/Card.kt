@@ -982,6 +982,8 @@ fun showdownSelectCard(
     height: Dp,
     data: ShowdownDTO
 ) {
+    Log.d("Card", data.toString())
+
     Card(
         modifier = Modifier
             .width(setUpWidth())
@@ -1000,8 +1002,41 @@ fun showdownSelectCard(
             },
         border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onSurface)
     ) {
-        Text(
-            text = data.userId
-        )
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "${data.userName} (나)"
+                    )
+
+                    Text(
+                        text = "${data.userSteps}걸음"
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "${data.otherName} (상대)"
+                    )
+
+                    Text(
+                        text = "${data.otherSteps}걸음"
+                    )
+                }
+            }
+        }
     }
 }

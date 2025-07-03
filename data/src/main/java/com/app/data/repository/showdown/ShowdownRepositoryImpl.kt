@@ -42,6 +42,9 @@ class ShowdownRepositoryImpl @Inject constructor(
     }
 
     override suspend fun delete(showdownInviteDTO: ShowdownInviteDTO, user: String, other: String, onSuccess: (Boolean) -> Unit) {
+        Log.d("ShowdownRepositoryImpl", user)
+        Log.d("ShowdownRepositoryImpl", other)
+
         return withContext(Dispatchers.IO) {
             val params = buildJsonObject {
                 put("pk_id", JsonPrimitive(showdownInviteDTO.id))
@@ -50,8 +53,8 @@ class ShowdownRepositoryImpl @Inject constructor(
             val showdownDTO = ShowdownDTO(
                 userId = showdownInviteDTO.userId,
                 otherId = showdownInviteDTO.otherId,
-                userName = user,
-                otherName = other
+                userName = user.trim('"'),
+                otherName = other.trim('"')
             )
 
             postgrest.rpc("delete_showdown_invite", params)

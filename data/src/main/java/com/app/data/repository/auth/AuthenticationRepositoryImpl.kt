@@ -132,7 +132,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
                 put("p_user_id", JsonPrimitive(userId))
             }
 
-            val result = postgrest.rpc("get_profile_url", params)
+            val result = postgrest.rpc("get_name", params)
 
             name = result.data
         }

@@ -18,5 +18,11 @@ data class ShowdownDTO(
     val userName: String = "",
 
     @SerialName("other_name")
-    val otherName: String = ""
+    val otherName: String = "",
+
+    @SerialName("user_steps")
+    val userSteps: Int? = 0,
+
+    @SerialName("other_steps")
+    val otherSteps: Int? = 0
 )

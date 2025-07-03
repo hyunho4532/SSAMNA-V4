@@ -396,7 +396,7 @@ fun ProfileScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "대결 (0)",
+                text = "대결 (${showdown.count()})",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -417,7 +417,7 @@ fun ProfileScreen(
         Column {
             showdown.forEach { sd ->
                 showdownSelectCard(
-                    height = 160.dp,
+                    height = 62.dp,
                     data = sd
                 )
             }
