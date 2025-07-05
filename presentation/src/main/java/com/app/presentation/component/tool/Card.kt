@@ -9,6 +9,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.collection.mutableFloatSetOf
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -42,6 +43,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -49,6 +52,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -982,8 +986,20 @@ fun showdownSelectCard(
     height: Dp,
     data: ShowdownDTO
 ) {
-    Log.d("Card", data.toString())
+    /**
+     * 현재 내 진행 상태
+     */
+    var userCurrentProgress by remember {
+        mutableFloatStateOf(0.5f)
+    }
 
+    /**
+     * 현재 상대 진행 상태
+     */
+    var otherCurrentProgress by remember {
+        mutableFloatStateOf(0.2f)
+    }
+    
     Card(
         modifier = Modifier
             .width(setUpWidth())
@@ -1005,7 +1021,8 @@ fun showdownSelectCard(
         Column {
             Row(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxWidth()
+                    .height(60.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
@@ -1019,7 +1036,7 @@ fun showdownSelectCard(
                     )
 
                     Text(
-                        text = "${data.userSteps}걸음"
+                        text = "${data.userSteps ?: '0'}걸음"
                     )
                 }
 
@@ -1033,9 +1050,46 @@ fun showdownSelectCard(
                     )
 
                     Text(
-                        text = "${data.otherSteps}걸음"
+                        text = "${data.otherSteps ?: '0'}걸음"
                     )
                 }
+            }
+
+            /**
+             * 현재 내 상태 프로그래스 바
+             */
+            Box(
+                modifier = Modifier
+                    .padding(top = 16.dp, start = 6.dp)
+            ) {
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(8.dp),
+                    progress = {
+                        userCurrentProgress
+                    },
+                    color = Color(0xFF429bf5)
+                )
+            }
+
+            /**
+             * 현재 상대 상태 프로그래스 바
+             */
+            Box(
+                modifier = Modifier
+                    .padding(top = 16.dp, end = 6.dp)
+            ) {
+                LinearProgressIndicator(
+                    progress = {
+                        otherCurrentProgress
+                    },
+                    modifier = Modifier
+                        .scale(scaleX = -1f, scaleY = 1f)
+                        .fillMaxWidth()
+                        .height(8.dp),
+                    color = Color(0xFFF11F38)
+                )
             }
         }
     }

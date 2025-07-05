@@ -76,10 +76,7 @@ fun ShowdownAuthScreen(
     if (isDialogPopup.value) {
         ShowdownInviteDialog(
             data = userDetailMaster.value,
-            isPopup = isDialogPopup,
-            onPermissionUserCheck = {
-
-            }
+            isPopup = isDialogPopup
         )
     }
 }

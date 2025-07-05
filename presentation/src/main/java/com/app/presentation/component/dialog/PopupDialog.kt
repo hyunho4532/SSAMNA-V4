@@ -903,7 +903,7 @@ fun ShowAccountDeleteDialog(
 fun ShowdownInviteDialog(
     data: UserDTO,
     isPopup: MutableState<Boolean>,
-    onPermissionUserCheck: (Boolean) -> Unit
+    commonCodeViewModel: CommonCodeViewModel = hiltViewModel()
 ) {
     Dialog(
         onDismissRequest = {

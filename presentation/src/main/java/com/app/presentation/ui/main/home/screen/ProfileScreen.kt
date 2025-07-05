@@ -417,7 +417,7 @@ fun ProfileScreen(
         Column {
             showdown.forEach { sd ->
                 showdownSelectCard(
-                    height = 62.dp,
+                    height = 140.dp,
                     data = sd
                 )
             }
