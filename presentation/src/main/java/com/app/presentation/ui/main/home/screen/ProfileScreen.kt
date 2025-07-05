@@ -59,6 +59,8 @@ import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.app.domain.model.dto.ShowdownDTO
+import com.app.domain.model.dto.ShowdownInviteDTO
 import com.app.domain.model.entry.PolygonBoxItem
 import com.app.domain.model.user.User
 import com.app.presentation.R
@@ -73,9 +75,12 @@ import com.app.presentation.component.util.responsive.setUpWidth
 import com.app.domain.model.enum.CardType
 import com.app.domain.model.state.ChallengeMaster
 import com.app.presentation.component.admob.Banner
+import com.app.presentation.component.dialog.ShowdownDialog
+import com.app.presentation.component.tool.showdownSelectCard
 import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.ChallengeViewModel
 import com.app.presentation.viewmodel.CrewViewModel
+import com.app.presentation.viewmodel.ShowdownViewModel
 import com.app.presentation.viewmodel.StateViewModel
 import com.app.presentation.viewmodel.UserViewModel
 import com.google.gson.Gson
@@ -94,6 +99,7 @@ fun ProfileScreen(
     challengeViewModel: ChallengeViewModel = hiltViewModel(),
     crewViewModel: CrewViewModel = hiltViewModel(),
     userViewModel: UserViewModel = hiltViewModel(),
+    showdownViewModel: ShowdownViewModel = hiltViewModel(),
     userList: State<User>,
     context: Context,
     stateViewModel: StateViewModel
@@ -140,6 +146,14 @@ fun ProfileScreen(
         mutableStateListOf<ChallengeMaster>()
     }
 
+    val showdown = remember {
+        mutableStateListOf<ShowdownDTO>()
+    }
+
+    val showdownInvite = remember {
+        mutableStateListOf<ShowdownInviteDTO>()
+    }
+
     var sumCount by remember {
         mutableIntStateOf(0)
     }
@@ -160,17 +174,37 @@ fun ProfileScreen(
         mutableStateOf(false)
     }
 
+    /**
+     * 대결 신청 팝업
+     */
+    val showdownDialogPopup = remember {
+        mutableStateOf(false)
+    }
+
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
 
     LaunchedEffect(key1 = Unit) {
         val challengeMasterAll = challengeViewModel.selectChallengeAll()
+        challengeMaster.addAll(challengeMasterAll)
+
+        /**
+         * 대결 초대 관련 테이블에 있는 데이터를 조회한다.
+         */
+        val showdownInviteMaster = showdownViewModel.select(userId = googleId)
+        showdownInvite.addAll(showdownInviteMaster)
+
+        /**
+         * 대결 테이블에 있는 데이터를 조회한다.
+         */
+        val showdownMaster = showdownViewModel.showdownSelect(userId = googleId)
+        showdown.addAll(showdownMaster)
 
         selectedImageUri = userViewModel.selectProfileUrl(googleId)?.toUri()
 
         activityLocationViewModel.selectActivityFindByGoogleId(userList.value.id)
-        challengeMaster.addAll(challengeMasterAll)
+
         challengeViewModel.selectChallengeByGoogleId(googleId = googleId)
         crewViewModel.crewFindById(googleId = googleId)
     }
@@ -256,6 +290,16 @@ fun ProfileScreen(
                     },
                     tint = MaterialTheme.colorScheme.onSurface
                 )
+
+                Image(
+                    painter = painterResource(R.drawable.showdown),
+                    contentDescription = "대결 조회 아이콘",
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clickable {
+                            showdownDialogPopup.value = true
+                        }
+                )
             }
         }
 
@@ -325,6 +369,56 @@ fun ProfileScreen(
                     activateDTO = activateDTO,
                     cardType = CardType.ActivateStatus.Activity,
                     navController = navController
+                )
+            }
+        }
+
+        Spacer(width = 0.dp, height = 46.dp)
+
+        /**
+         * 현재 사용자의 활동과 활동 갯수, 전체 활동 화면이 이동되는 아이콘을 조회한다.
+         */
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 60.dp, end = 18.dp)
+                .clickable(
+                    interactionSource = remember {
+                        MutableInteractionSource()
+                    },
+                    indication = rememberRipple(
+                        color = Color.Gray,
+                        bounded = true
+                    )
+                ) {
+                    navController.navigate("showdownAuth")
+                },
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "대결 (${showdown.count()})",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Image(
+                modifier = Modifier
+                    .size(28.dp),
+                painter = painterResource(id = R.drawable.baseline_add_24),
+                contentDescription = "추가 아이콘",
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+            )
+        }
+
+        /**
+         * 대결 내역을 조회한다.
+         */
+        Column {
+            showdown.forEach { sd ->
+                showdownSelectCard(
+                    height = 140.dp,
+                    data = sd
                 )
             }
         }
@@ -510,6 +604,13 @@ fun ProfileScreen(
                 sumCount = sumCount
             )
         }
+    }
+
+    if (showdownDialogPopup.value) {
+        ShowdownDialog(
+            isShowdownPopup = showdownDialogPopup,
+            showdownInvite = showdownInvite
+        )
     }
 
     if (showChallengeBottomSheet.value) {

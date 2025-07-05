@@ -22,6 +22,10 @@ class LoginCase @Inject constructor(
         authenticationRepository.saveUser(user)
     }
 
+    suspend fun selectUserAll(): List<UserDTO> {
+        return authenticationRepository.selectUserAll()
+    }
+
     suspend fun selectUserFindById(googleId: String) : UserDTO {
         return authenticationRepository.selectUserFindById(googleId)
     }
@@ -41,5 +45,9 @@ class LoginCase @Inject constructor(
 
     suspend fun selectProfileUrl(googleId: String) : String {
         return authenticationRepository.selectProfileUrl(googleId)
+    }
+
+    suspend fun selectName(userId: String) : String {
+        return authenticationRepository.getName(userId)
     }
 }

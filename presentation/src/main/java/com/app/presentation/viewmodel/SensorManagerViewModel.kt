@@ -137,11 +137,13 @@ class SensorManagerViewModel @Inject constructor(
                             val newTime = it.time + 1
                             sharedPreferences.edit().putLong("time", newTime).apply()
 
-                            if (newTime % voice!!.time == 0L) {
-                                ttsCase.speak(
-                                    text = "현재 걸음 수: $pedometerCount, 시간은 ${FormatImpl("YY:MM:DD:H").getSpeakTime(newTime)} 입니다.",
-                                    voice = voice
-                                )
+                            voice?.let {
+                                if (voice.time.toLong() != 0L && newTime % voice.time == 0L) {
+                                    ttsCase.speak(
+                                        text = "현재 걸음 수: $pedometerCount, 시간은 ${FormatImpl("YY:MM:DD:H").getSpeakTime(newTime)} 입니다.",
+                                        voice = voice
+                                    )
+                                }
                             }
 
                             it.copy(time = newTime)

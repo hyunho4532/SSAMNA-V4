@@ -15,5 +15,5 @@ data class Code(
     val name: String = "",
 
     @SerialName("img_path")
-    val imgPath: String = ""
+    val imgPath: String? = ""
 )

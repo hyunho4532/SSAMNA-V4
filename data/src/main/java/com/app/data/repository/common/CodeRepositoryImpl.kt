@@ -11,10 +11,10 @@ import javax.inject.Inject
 class CodeRepositoryImpl @Inject constructor(
     private val postgrest: Postgrest
 ): CodeRepository {
-    override suspend fun select(): List<Code> {
+    override suspend fun select(groupKey: String): List<Code> {
         return withContext(Dispatchers.IO) {
             postgrest
-                .rpc("get_common_code", mapOf("groupkey" to "ACTIVATE_STATUS"))
+                .rpc("get_common_code", mapOf("groupkey" to groupKey))
                 .decodeList<Code>()
         }
     }

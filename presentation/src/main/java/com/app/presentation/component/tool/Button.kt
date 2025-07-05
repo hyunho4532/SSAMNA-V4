@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.height
@@ -41,12 +42,14 @@ import com.app.domain.model.enum.VoiceType
 import com.app.domain.model.state.ChallengeMaster
 import com.app.domain.model.state.CrewMaster
 import com.app.domain.model.state.Voice
+import com.app.domain.model.user.UserDTO
 import com.app.presentation.ui.main.home.HomeActivity
 import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.ChallengeViewModel
 import com.app.presentation.viewmodel.CrewViewModel
 import com.app.presentation.viewmodel.LocationManagerViewModel
 import com.app.presentation.viewmodel.SensorManagerViewModel
+import com.app.presentation.viewmodel.ShowdownViewModel
 import com.app.presentation.viewmodel.StateViewModel
 import com.app.presentation.viewmodel.TTSViewModel
 import com.app.presentation.viewmodel.UserViewModel
@@ -66,8 +69,10 @@ fun CustomButton(
     onNavigateToCheck: (Boolean) -> Unit = {},
     shape: String = "Circle",
     data: Any? = null,
+    subData: Any? = null,
     crewId: Int? = 0,
     onClick: (permissionPopup: Boolean) -> Unit = { },
+    dataIntent: (permissionPopup: Boolean, data: Any) -> Unit = { _, _ -> },
     @ApplicationContext context: Context = LocalContext.current,
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
     coordinate: List<Coordinate> = emptyList(),
@@ -79,7 +84,8 @@ fun CustomButton(
     userViewModel: UserViewModel = hiltViewModel(),
     crewViewModel: CrewViewModel = hiltViewModel(),
     stateViewModel: StateViewModel = hiltViewModel(),
-    ttsViewModel: TTSViewModel = hiltViewModel()
+    ttsViewModel: TTSViewModel = hiltViewModel(),
+    showdownViewModel: ShowdownViewModel = hiltViewModel()
 ) {
     val activates = activityLocationViewModel.activates.collectAsState()
 
@@ -133,10 +139,25 @@ fun CustomButton(
                 }
                 else -> {
                     when (type) {
+                        ButtonType.ShowdownStatus.INVITE -> {
+                            /**
+                             * 클릭 시 다이얼로그 팝업이 조회된다.
+                             * 조회되기 전, 데이터를 먼저 전달 후, 팝업된다.
+                             */
+                            dataIntent(true, data!!)
+                        }
+                        ButtonType.ShowdownStatus.INSERT -> {
+                            showdownViewModel.insert(
+                                userId = googleId,
+                                username = username,
+                                data = data as UserDTO,
+                                subData = subData as Int
+                            )
+                        }
                         ButtonType.RunningStatus.FINISH -> {
                             if (sensorManagerViewModel.getSavedSensorState() < 100) {
                                 ttsViewModel.speak(
-                                    "운동이 종료되었습니다. 통계: ${sensorManagerViewModel.getSavedSensorState()}보, ${FormatImpl("YY:MM:DD:H").getSpeakTime(activates.value.time)} 입니다."
+                                    "운동이 종료되었습니다. 통계: ${sensorManagerViewModel.getSavedSensorState()}보, ${FormatImpl("YY:MM:DD:H").getSpeakTime(sensorManagerViewModel.getSavedTimeState())} 입니다."
                                 )
 
                                 sensorManagerViewModel.stopService(

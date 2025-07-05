@@ -13,7 +13,7 @@ class CommonCodeViewModel @Inject constructor(
     /**
      * 공통 코드 조회
      */
-    suspend fun select(): List<Code> {
-        return codeCase.select()
+    suspend fun select(groupKey: String): List<Code> {
+        return codeCase.select(groupKey)
     }
 }

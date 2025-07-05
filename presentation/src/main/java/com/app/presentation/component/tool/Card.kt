@@ -2,9 +2,14 @@ package com.app.presentation.component.tool
 
 import android.content.Context
 import android.net.Uri
+import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.collection.mutableFloatSetOf
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -25,22 +30,29 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -60,6 +72,9 @@ import coil.compose.AsyncImage
 import com.app.domain.model.state.Activate
 import com.app.domain.model.dto.ActivateDTO
 import com.app.domain.model.dto.ChallengeDTO
+import com.app.domain.model.dto.ShowdownDTO
+import com.app.domain.model.dto.ShowdownInviteDTO
+import com.app.domain.model.enum.ButtonType
 import com.app.domain.model.location.Coordinate
 import com.app.domain.model.state.ActivateForm
 import com.app.domain.model.user.User
@@ -67,10 +82,14 @@ import com.app.presentation.R
 import com.app.presentation.component.util.responsive.setUpWidth
 import com.app.domain.model.enum.CardType
 import com.app.domain.model.state.ChallengeMaster
+import com.app.domain.model.user.UserDTO
 import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.JsonParseViewModel
+import com.app.presentation.viewmodel.ShowdownViewModel
 import com.app.presentation.viewmodel.StateViewModel
+import com.app.presentation.viewmodel.UserViewModel
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.double
 import kotlinx.serialization.json.doubleOrNull
@@ -786,6 +805,297 @@ fun chartDetailCard(
                     text = "고도, 걸음, 페이스 측정",
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
+    }
+}
+
+/**
+ * 대결할 상대 사용자 조회
+ */
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun showdownAuthCard(
+    height: Dp,
+    userDTO: UserDTO,
+    onSuccess: (Boolean, Any) -> Unit
+) {
+    Card (
+        modifier = Modifier
+            .padding(top = 8.dp)
+            .width(setUpWidth())
+            .height(height)
+            .shadow(
+                elevation = 6.dp,
+                ambientColor = Color.Gray,
+                spotColor = Color.Gray
+            )
+            .clickable(
+                interactionSource = remember {
+                    MutableInteractionSource()
+                },
+                indication = rememberRipple(
+                    color = Color.Gray,
+                    bounded = true
+                )
+            ) {
+
+            },
+        colors = CardDefaults.cardColors(
+            contentColor = Color.White
+        )
+    ) {
+        Row (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                modifier = Modifier
+                    .size(32.dp),
+                painter = painterResource(id = R.drawable.default_user),
+                contentDescription = "땀나 기본 로고"
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    modifier = Modifier.padding(start = 6.dp),
+                    text = userDTO.name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Box(
+                    modifier = Modifier
+                        .padding(end = 6.dp)
+                ) {
+                    CustomButton(
+                        data = userDTO,
+                        type = ButtonType.ShowdownStatus.INVITE,
+                        width = 92.dp,
+                        height = 32.dp,
+                        text = "초대",
+                        shape = "Rectangle",
+                        dataIntent = { popup, data ->
+                            onSuccess(popup, data)
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun showdownCard(
+    height: Dp,
+    showdownInviteDTO: ShowdownInviteDTO,
+    showdownViewModel: ShowdownViewModel = hiltViewModel()
+) {
+    Card (
+        modifier = Modifier
+            .padding(top = 8.dp, start = 4.dp, end = 4.dp)
+            .width(setUpWidth())
+            .height(height)
+            .shadow(
+                elevation = 6.dp,
+                ambientColor = Color.Gray,
+                spotColor = Color.Gray
+            ),
+        colors = CardDefaults.cardColors(
+            contentColor = Color.White
+        )
+    ) {
+        Row (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    modifier = Modifier.padding(start = 4.dp),
+                    text = showdownInviteDTO.message,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .clickable(
+                                interactionSource = remember {
+                                    MutableInteractionSource()
+                                },
+                                indication = rememberRipple(
+                                    color = Color.Gray,
+                                    bounded = true
+                                )
+                            ) {
+                                showdownViewModel.delete(showdownInviteDTO) {
+                                    if (it) {
+                                        Log.d("Card", "데이터 삭제 완료")
+                                    }
+                                }
+                            },
+                        painter = painterResource(R.drawable.check),
+                        contentDescription = "대결 수락 아이콘"
+                    )
+
+                    Image(
+                        modifier = Modifier
+                            .clickable(
+                                interactionSource = remember {
+                                    MutableInteractionSource()
+                                },
+                                indication = rememberRipple(
+                                    color = Color.Gray,
+                                    bounded = true
+                                )
+                            ) {
+
+                            },
+                        painter = painterResource(R.drawable.not_check),
+                        contentDescription = "대결 거절 아이콘"
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun showdownSelectCard(
+    height: Dp,
+    data: ShowdownDTO,
+    userViewModel: UserViewModel = hiltViewModel()
+) {
+    /**
+     * 현재 내 user_id 조회
+     */
+    val userId = userViewModel.getSavedLoginState()
+
+    /**
+     * 현재 내 진행 상태
+     */
+    val userCurrentProgress by remember {
+        mutableFloatStateOf(0.5f)
+    }
+
+    /**
+     * 현재 상대 진행 상태
+     */
+    val otherCurrentProgress by remember {
+        mutableFloatStateOf(0.2f)
+    }
+    
+    Card(
+        modifier = Modifier
+            .width(setUpWidth())
+            .height(height)
+            .padding(top = 8.dp)
+            .clickable(
+                interactionSource = remember {
+                    MutableInteractionSource()
+                },
+                indication = rememberRipple(
+                    color = Color.Gray,
+                    bounded = true
+                )
+            ) {
+
+            },
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onSurface)
+    ) {
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "${data.names[0]} (나)"
+                    )
+
+                    Text(
+                        text = "${data.userSteps ?: '0'}걸음"
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "${data.names[1]} (상대)"
+                    )
+
+                    Text(
+                        text = "${data.otherSteps ?: '0'}걸음"
+                    )
+                }
+            }
+
+            /**
+             * 현재 내 상태 프로그래스 바
+             */
+            Box(
+                modifier = Modifier
+                    .padding(top = 16.dp, start = 6.dp)
+            ) {
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(8.dp),
+                    progress = {
+                        userCurrentProgress
+                    },
+                    color = Color(0xFF429bf5)
+                )
+            }
+
+            /**
+             * 현재 상대 상태 프로그래스 바
+             */
+            Box(
+                modifier = Modifier
+                    .padding(top = 16.dp, end = 6.dp)
+            ) {
+                LinearProgressIndicator(
+                    progress = {
+                        otherCurrentProgress
+                    },
+                    modifier = Modifier
+                        .scale(scaleX = -1f, scaleY = 1f)
+                        .fillMaxWidth()
+                        .height(8.dp),
+                    color = Color(0xFFF11F38)
                 )
             }
         }
