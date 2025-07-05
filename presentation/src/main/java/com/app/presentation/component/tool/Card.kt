@@ -94,6 +94,8 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.double
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 @Composable
@@ -996,17 +998,36 @@ fun showdownSelectCard(
     /**
      * 현재 내 진행 상태
      */
-    val userCurrentProgress by remember {
+    var userCurrentProgress by remember {
         mutableFloatStateOf(0.5f)
     }
 
     /**
      * 현재 상대 진행 상태
      */
-    val otherCurrentProgress by remember {
+    var otherCurrentProgress by remember {
         mutableFloatStateOf(0.2f)
     }
-    
+
+    val isUserMe = data.userId == userId
+    val myName = if (isUserMe) data.userName else data.otherName
+    val opponentName = if (isUserMe) data.otherName else data.userName
+
+    val mySteps = if (isUserMe) data.userSteps else data.otherSteps
+    val opponentSteps = if (isUserMe) data.otherSteps else data.userSteps
+
+    userCurrentProgress = if (mySteps != null) {
+        (userCurrentProgress / 10000f).coerceIn(0f, 1f)
+    } else {
+        0f
+    }
+
+    otherCurrentProgress = if (opponentSteps != null) {
+        (opponentSteps / 10000f).coerceIn(0f, 1f)
+    } else {
+        0f
+    }
+
     Card(
         modifier = Modifier
             .width(setUpWidth())
@@ -1039,11 +1060,11 @@ fun showdownSelectCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "${data.names[0]} (나)"
+                        text = "$myName (나)"
                     )
 
                     Text(
-                        text = "${data.userSteps ?: '0'}걸음"
+                        text = "${mySteps ?: 0}걸음"
                     )
                 }
 
@@ -1053,11 +1074,11 @@ fun showdownSelectCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "${data.names[1]} (상대)"
+                        text = "$opponentName (상대)"
                     )
 
                     Text(
-                        text = "${data.otherSteps ?: '0'}걸음"
+                        text = "${opponentSteps ?: 0}걸음"
                     )
                 }
             }

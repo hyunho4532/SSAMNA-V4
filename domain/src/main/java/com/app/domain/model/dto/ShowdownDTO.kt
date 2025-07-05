@@ -18,8 +18,11 @@ data class ShowdownDTO(
     @SerialName("other_id")
     val otherId: String = "",
 
-    @SerialName("names")
-    val names: JsonArray,
+    @SerialName("user_name")
+    val userName: String = "",
+
+    @SerialName("other_name")
+    val otherName: String = "",
 
     @SerialName("user_steps")
     val userSteps: Int? = 0,
