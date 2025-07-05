@@ -60,6 +60,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -999,33 +1000,32 @@ fun showdownSelectCard(
      * 현재 내 진행 상태
      */
     var userCurrentProgress by remember {
-        mutableFloatStateOf(0.5f)
+        mutableFloatStateOf(0f)
     }
 
     /**
      * 현재 상대 진행 상태
      */
     var otherCurrentProgress by remember {
-        mutableFloatStateOf(0.2f)
+        mutableFloatStateOf(0f)
     }
 
+    /**
+     * 나인지, 상대인지 여부를 확인 후, myName과 opp
+     */
     val isUserMe = data.userId == userId
     val myName = if (isUserMe) data.userName else data.otherName
-    val opponentName = if (isUserMe) data.otherName else data.userName
+    val otherName = if (isUserMe) data.otherName else data.userName
 
     val mySteps = if (isUserMe) data.userSteps else data.otherSteps
-    val opponentSteps = if (isUserMe) data.otherSteps else data.userSteps
+    val otherSteps = if (isUserMe) data.otherSteps else data.userSteps
 
-    userCurrentProgress = if (mySteps != null) {
-        (userCurrentProgress / 10000f).coerceIn(0f, 1f)
-    } else {
-        0f
+    if (mySteps != null) {
+        userCurrentProgress = (mySteps / data.goal.toFloat()).coerceIn(0f, 1f)
     }
 
-    otherCurrentProgress = if (opponentSteps != null) {
-        (opponentSteps / 10000f).coerceIn(0f, 1f)
-    } else {
-        0f
+    if (otherSteps != null) {
+        otherCurrentProgress = (otherSteps / data.goal.toFloat()).coerceIn(0f, 1f)
     }
 
     Card(
@@ -1060,7 +1060,8 @@ fun showdownSelectCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "$myName (나)"
+                        text = "(나)",
+                        fontWeight = FontWeight.Bold
                     )
 
                     Text(
@@ -1068,17 +1069,22 @@ fun showdownSelectCard(
                     )
                 }
 
+                Text(
+                    text = "VS",
+                    fontWeight = FontWeight.Bold
+                )
+
                 Column(
                     modifier = Modifier
                         .weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "$opponentName (상대)"
+                        text = otherName
                     )
 
                     Text(
-                        text = "${opponentSteps ?: 0}걸음"
+                        text = "${otherSteps ?: 0}걸음"
                     )
                 }
             }
@@ -1117,6 +1123,36 @@ fun showdownSelectCard(
                         .fillMaxWidth()
                         .height(8.dp),
                     color = Color(0xFFF11F38)
+                )
+            }
+
+            /**
+             * 목표 대결 걸음
+             */
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "목표 걸음: ${data.goal}"
+                )
+            }
+
+            if ()
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CustomButton(
+                    type = ButtonType.RunningStatus.FINISH,
+                    width = setUpWidth(),
+                    height = 32.dp,
+                    text = "대결 종료!",
+                    shape = "Circle"
                 )
             }
         }

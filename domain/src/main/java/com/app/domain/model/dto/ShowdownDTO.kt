@@ -6,6 +6,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
+import java.io.Serial
 
 @Serializable
 data class ShowdownDTO(
@@ -23,6 +24,9 @@ data class ShowdownDTO(
 
     @SerialName("other_name")
     val otherName: String = "",
+
+    @SerialName("goal")
+    val goal: Int = 0,
 
     @SerialName("user_steps")
     val userSteps: Int? = 0,

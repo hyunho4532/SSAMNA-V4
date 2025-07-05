@@ -55,10 +55,11 @@ class ShowdownRepositoryImpl @Inject constructor(
             val showdownDTO = ShowdownDTO(
                 userId = showdownInviteDTO.userId,
                 otherId = showdownInviteDTO.otherId,
-                userName = user,
-                otherName = other,
+                userName = user.trim('"'),
+                otherName = other.trim('"'),
                 userSteps = 0,
-                otherSteps = 0
+                otherSteps = 0,
+                goal = showdownInviteDTO.goal
             )
 
             postgrest.rpc("delete_showdown_invite", params)
