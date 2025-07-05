@@ -275,7 +275,6 @@ fun ReportCard(userState: User) {
 fun activateCard(
     context: Context? = LocalContext.current,
     height: Dp,
-    backgroundColor: Color = Color.White,
     activate: Activate? = Activate(),
     activateDTO: ActivateDTO? = ActivateDTO(),
     showBottomSheet: MutableState<Boolean>? = mutableStateOf(false),
@@ -1014,7 +1013,6 @@ fun showdownSelectCard(
      * 나인지, 상대인지 여부를 확인 후, myName과 opp
      */
     val isUserMe = data.userId == userId
-    val myName = if (isUserMe) data.userName else data.otherName
     val otherName = if (isUserMe) data.otherName else data.userName
 
     val mySteps = if (isUserMe) data.userSteps else data.otherSteps
@@ -1028,10 +1026,16 @@ fun showdownSelectCard(
         otherCurrentProgress = (otherSteps / data.goal.toFloat()).coerceIn(0f, 1f)
     }
 
+    val extraHeight = when {
+        mySteps != null && mySteps > data.goal -> 30.dp
+        otherSteps != null && otherSteps > data.goal -> 30.dp
+        else -> 0.dp
+    }
+
     Card(
         modifier = Modifier
             .width(setUpWidth())
-            .height(height)
+            .height(height + extraHeight)
             .padding(top = 8.dp)
             .clickable(
                 interactionSource = remember {
@@ -1094,7 +1098,7 @@ fun showdownSelectCard(
              */
             Box(
                 modifier = Modifier
-                    .padding(top = 16.dp, start = 6.dp)
+                    .padding(top = 16.dp, start = 6.dp, end = 6.dp)
             ) {
                 LinearProgressIndicator(
                     modifier = Modifier
@@ -1112,7 +1116,7 @@ fun showdownSelectCard(
              */
             Box(
                 modifier = Modifier
-                    .padding(top = 16.dp, end = 6.dp)
+                    .padding(top = 16.dp, start =  6.dp, end = 6.dp)
             ) {
                 LinearProgressIndicator(
                     progress = {
@@ -1126,34 +1130,42 @@ fun showdownSelectCard(
                 )
             }
 
-            /**
-             * 목표 대결 걸음
-             */
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "목표 걸음: ${data.goal}"
-                )
+            if (mySteps != null) {
+                if (mySteps > data.goal) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CustomButton(
+                            type = ButtonType.ShowdownStatus.DELETE,
+                            width = setUpWidth(),
+                            height = 32.dp,
+                            text = "확인! (삭제)",
+                            shape = "Circle"
+                        )
+                    }
+                }
             }
 
-            if ()
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                CustomButton(
-                    type = ButtonType.RunningStatus.FINISH,
-                    width = setUpWidth(),
-                    height = 32.dp,
-                    text = "대결 종료!",
-                    shape = "Circle"
-                )
+            if (otherSteps != null) {
+                if (otherSteps > data.goal) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CustomButton(
+                            type = ButtonType.ShowdownStatus.DELETE,
+                            width = setUpWidth(),
+                            height = 32.dp,
+                            text = "확인! (삭제)",
+                            shape = "Circle"
+                        )
+                    }
+                }
             }
         }
     }

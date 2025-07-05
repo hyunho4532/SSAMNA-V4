@@ -146,6 +146,9 @@ fun CustomButton(
                              */
                             dataIntent(true, data!!)
                         }
+                        ButtonType.ShowdownStatus.DELETE -> {
+                            onClick(true)
+                        }
                         ButtonType.ShowdownStatus.INSERT -> {
                             showdownViewModel.insert(
                                 userId = googleId,

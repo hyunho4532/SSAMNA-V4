@@ -16,6 +16,7 @@ sealed class ButtonType {
     sealed class ShowdownStatus: ButtonType() {
         data object INVITE : ShowdownStatus()
         data object INSERT : ShowdownStatus()
+        data object DELETE : ShowdownStatus()
     }
 
     sealed class RunningStatus: ButtonType() {
