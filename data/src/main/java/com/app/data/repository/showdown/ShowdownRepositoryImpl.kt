@@ -1,6 +1,6 @@
 package com.app.data.repository.showdown
 
-import android.util.Log
+import com.app.domain.model.calcul.FormatImpl
 import com.app.domain.model.dto.ShowdownDTO
 import com.app.domain.model.dto.ShowdownInviteDTO
 import com.app.domain.repository.ShowdownRepository
@@ -8,8 +8,13 @@ import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.rpc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import java.math.BigDecimal
 import javax.inject.Inject
 
 class ShowdownRepositoryImpl @Inject constructor(
@@ -42,8 +47,20 @@ class ShowdownRepositoryImpl @Inject constructor(
     }
 
     override suspend fun delete(showdownInviteDTO: ShowdownInviteDTO, user: String, other: String, onSuccess: (Boolean) -> Unit) {
-        Log.d("ShowdownRepositoryImpl", user)
-        Log.d("ShowdownRepositoryImpl", other)
+        val data = buildJsonArray {
+            add(
+                buildJsonObject {
+                    put("user_id", showdownInviteDTO.userId)
+                    put("user_name", user)
+                }
+            )
+            add(
+                buildJsonObject {
+                    put("user_id", showdownInviteDTO.otherId)
+                    put("user_name", other)
+                }
+            )
+        }
 
         return withContext(Dispatchers.IO) {
             val params = buildJsonObject {
@@ -53,8 +70,7 @@ class ShowdownRepositoryImpl @Inject constructor(
             val showdownDTO = ShowdownDTO(
                 userId = showdownInviteDTO.userId,
                 otherId = showdownInviteDTO.otherId,
-                userName = user.trim('"'),
-                otherName = other.trim('"')
+                names = data
             )
 
             postgrest.rpc("delete_showdown_invite", params)

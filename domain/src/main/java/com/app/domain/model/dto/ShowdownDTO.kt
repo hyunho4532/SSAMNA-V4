@@ -2,6 +2,10 @@ package com.app.domain.model.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
 
 @Serializable
 data class ShowdownDTO(
@@ -14,11 +18,8 @@ data class ShowdownDTO(
     @SerialName("other_id")
     val otherId: String = "",
 
-    @SerialName("user_name")
-    val userName: String = "",
-
-    @SerialName("other_name")
-    val otherName: String = "",
+    @SerialName("names")
+    val names: JsonArray,
 
     @SerialName("user_steps")
     val userSteps: Int? = 0,

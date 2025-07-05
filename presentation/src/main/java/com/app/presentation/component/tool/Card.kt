@@ -87,6 +87,7 @@ import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.JsonParseViewModel
 import com.app.presentation.viewmodel.ShowdownViewModel
 import com.app.presentation.viewmodel.StateViewModel
+import com.app.presentation.viewmodel.UserViewModel
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonPrimitive
@@ -984,19 +985,25 @@ fun showdownCard(
 @Composable
 fun showdownSelectCard(
     height: Dp,
-    data: ShowdownDTO
+    data: ShowdownDTO,
+    userViewModel: UserViewModel = hiltViewModel()
 ) {
+    /**
+     * 현재 내 user_id 조회
+     */
+    val userId = userViewModel.getSavedLoginState()
+
     /**
      * 현재 내 진행 상태
      */
-    var userCurrentProgress by remember {
+    val userCurrentProgress by remember {
         mutableFloatStateOf(0.5f)
     }
 
     /**
      * 현재 상대 진행 상태
      */
-    var otherCurrentProgress by remember {
+    val otherCurrentProgress by remember {
         mutableFloatStateOf(0.2f)
     }
     
@@ -1032,7 +1039,7 @@ fun showdownSelectCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "${data.userName} (나)"
+                        text = "${data.names[0]} (나)"
                     )
 
                     Text(
@@ -1046,7 +1053,7 @@ fun showdownSelectCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "${data.otherName} (상대)"
+                        text = "${data.names[1]} (상대)"
                     )
 
                     Text(

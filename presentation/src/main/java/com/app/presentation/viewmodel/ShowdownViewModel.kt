@@ -24,7 +24,8 @@ class ShowdownViewModel @Inject constructor(
     fun insert(
         userId: String,
         username: String,
-        data: UserDTO
+        data: UserDTO,
+        subData: Int
     ) {
         viewModelScope.launch {
             val user = loginCase.selectUserFindById(userId)
@@ -32,7 +33,8 @@ class ShowdownViewModel @Inject constructor(
             val showdownInviteDTO = ShowdownInviteDTO(
                 userId = data.userId,
                 otherId = userId,
-                message = "${user.name}님이 대결을 신청했습니다!"
+                message = "${user.name}님이 대결을 신청했습니다!",
+                goal = subData
             )
 
             showdownCase.insert(showdownInviteDTO)

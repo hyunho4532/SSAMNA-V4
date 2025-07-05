@@ -15,5 +15,8 @@ data class ShowdownInviteDTO(
     val message: String = "",
 
     @SerialName("other_id")
-    val otherId: String = ""
+    val otherId: String = "",
+
+    @SerialName("goal")
+    val goal: Int = 0
 )

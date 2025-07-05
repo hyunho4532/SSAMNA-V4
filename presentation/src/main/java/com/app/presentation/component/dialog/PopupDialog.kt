@@ -918,8 +918,12 @@ fun ShowdownInviteDialog(
     isPopup: MutableState<Boolean>,
     commonCodeViewModel: CommonCodeViewModel = hiltViewModel()
 ) {
-    var selectedIndex = remember {
+    val selectedIndex = remember {
         mutableIntStateOf(0)
+    }
+
+    val selectedGoal = remember {
+        mutableIntStateOf(5000)
     }
 
     val showdownGoalList = remember {
@@ -964,7 +968,7 @@ fun ShowdownInviteDialog(
 
                 SingleChoiceSegmentedButtonRow(
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(start = 16.dp, end = 16.dp)
                 ) {
                     showdownGoalList.forEachIndexed { index, label ->
                         SegmentedButton(
@@ -972,7 +976,10 @@ fun ShowdownInviteDialog(
                                 index = index,
                                 count = showdownGoalList.size
                             ),
-                            onClick = { selectedIndex.intValue = index },
+                            onClick = {
+                                selectedIndex.intValue = index
+                                selectedGoal.intValue = label.name.toInt()
+                            },
                             selected = index == selectedIndex.intValue,
                             label = { Text(label.name) }
                         )
@@ -990,6 +997,7 @@ fun ShowdownInviteDialog(
                         text = "상대와 대결하기",
                         shape = "Rectangle",
                         data = data,
+                        subData = selectedGoal.intValue
                     )
                 }
             }

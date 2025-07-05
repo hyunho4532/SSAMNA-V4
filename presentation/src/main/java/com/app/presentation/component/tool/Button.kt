@@ -69,6 +69,7 @@ fun CustomButton(
     onNavigateToCheck: (Boolean) -> Unit = {},
     shape: String = "Circle",
     data: Any? = null,
+    subData: Any? = null,
     crewId: Int? = 0,
     onClick: (permissionPopup: Boolean) -> Unit = { },
     dataIntent: (permissionPopup: Boolean, data: Any) -> Unit = { _, _ -> },
@@ -149,7 +150,8 @@ fun CustomButton(
                             showdownViewModel.insert(
                                 userId = googleId,
                                 username = username,
-                                data = data as UserDTO
+                                data = data as UserDTO,
+                                subData = subData as Int
                             )
                         }
                         ButtonType.RunningStatus.FINISH -> {
