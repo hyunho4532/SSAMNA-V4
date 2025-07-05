@@ -3,6 +3,7 @@ package com.app.presentation.component.dialog
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -34,6 +37,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -48,6 +52,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.app.domain.model.common.Code
+import com.app.domain.model.dto.ActivateDTO
 import com.app.domain.model.dto.ChallengeDTO
 import com.app.domain.model.dto.ShowdownInviteDTO
 import com.app.domain.model.location.Coordinate
@@ -72,6 +77,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlin.math.expm1
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -94,7 +100,7 @@ fun ShowCompleteDialog(
 
     LaunchedEffect(key1 = Unit) {
         if (activateStatusList.isEmpty()) {
-            val codes = codeViewModel.select()
+            val codes = codeViewModel.select("ACTIVATE_STATUS")
             activateStatusList.addAll(codes)
         }
 
@@ -905,6 +911,18 @@ fun ShowdownInviteDialog(
     isPopup: MutableState<Boolean>,
     commonCodeViewModel: CommonCodeViewModel = hiltViewModel()
 ) {
+    var expanded = remember {
+        mutableStateOf(false)
+    }
+
+    val showdownGoalList = remember {
+        mutableStateListOf<Code>()
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        showdownGoalList.addAll(commonCodeViewModel.select("SHOWDOWN_WALK"))
+    }
+
     Dialog(
         onDismissRequest = {
             isPopup.value = false
@@ -913,7 +931,7 @@ fun ShowdownInviteDialog(
         Card(
             modifier = Modifier
                 .width(420.dp)
-                .height(120.dp),
+                .height(160.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color.White
@@ -936,6 +954,29 @@ fun ShowdownInviteDialog(
                     text = "해당 사용자와 대결하시겠습니까?",
                     fontSize = 14.sp
                 )
+
+                DropdownMenu(
+                    expanded = expanded.value,
+                    onDismissRequest = { expanded.value = false }
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text("1000")
+                        },
+                        onClick = {
+
+                        }
+                    )
+
+                    DropdownMenuItem(
+                        text = {
+                            Text("50000")
+                        },
+                        onClick = {
+
+                        }
+                    )
+                }
 
                 Box(
                     modifier = Modifier

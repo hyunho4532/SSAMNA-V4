@@ -61,7 +61,7 @@ fun BoxRow(
                 )
             }
             else if (items is Code) {
-                val imageName = items.imgPath.replace("R.drawable.", "")
+                val imageName = items.imgPath!!.replace("R.drawable.", "")
                 val imageResId = context.resources.getIdentifier(imageName, "drawable", context.packageName)
 
                 Box(

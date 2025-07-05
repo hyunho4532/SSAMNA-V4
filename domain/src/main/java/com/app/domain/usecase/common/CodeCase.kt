@@ -7,7 +7,7 @@ import javax.inject.Inject
 class CodeCase @Inject constructor(
     private val codeRepository: CodeRepository
 ) {
-    suspend fun select(): List<Code> {
-        return codeRepository.select()
+    suspend fun select(groupKey: String): List<Code> {
+        return codeRepository.select(groupKey)
     }
 }
