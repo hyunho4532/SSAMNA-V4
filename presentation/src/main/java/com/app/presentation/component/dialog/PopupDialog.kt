@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.app.presentation.component.dialog
 
 import android.annotation.SuppressLint
@@ -24,9 +26,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -36,6 +42,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -911,8 +918,8 @@ fun ShowdownInviteDialog(
     isPopup: MutableState<Boolean>,
     commonCodeViewModel: CommonCodeViewModel = hiltViewModel()
 ) {
-    var expanded = remember {
-        mutableStateOf(false)
+    var selectedIndex = remember {
+        mutableIntStateOf(0)
     }
 
     val showdownGoalList = remember {
@@ -931,7 +938,7 @@ fun ShowdownInviteDialog(
         Card(
             modifier = Modifier
                 .width(420.dp)
-                .height(160.dp),
+                .height(170.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color.White
@@ -951,31 +958,25 @@ fun ShowdownInviteDialog(
                 )
 
                 Text(
-                    text = "해당 사용자와 대결하시겠습니까?",
+                    text = "아래 목표 걸음을 입력해주세요!",
                     fontSize = 14.sp
                 )
 
-                DropdownMenu(
-                    expanded = expanded.value,
-                    onDismissRequest = { expanded.value = false }
+                SingleChoiceSegmentedButtonRow(
+                    modifier = Modifier
+                        .padding(16.dp)
                 ) {
-                    DropdownMenuItem(
-                        text = {
-                            Text("1000")
-                        },
-                        onClick = {
-
-                        }
-                    )
-
-                    DropdownMenuItem(
-                        text = {
-                            Text("50000")
-                        },
-                        onClick = {
-
-                        }
-                    )
+                    showdownGoalList.forEachIndexed { index, label ->
+                        SegmentedButton(
+                            shape = SegmentedButtonDefaults.itemShape(
+                                index = index,
+                                count = showdownGoalList.size
+                            ),
+                            onClick = { selectedIndex.intValue = index },
+                            selected = index == selectedIndex.intValue,
+                            label = { Text(label.name) }
+                        )
+                    }
                 }
 
                 Box(
