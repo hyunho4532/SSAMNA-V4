@@ -7,6 +7,10 @@ import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,13 +54,17 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import coil.compose.AsyncImage
 import com.app.domain.model.common.Code
 import com.app.domain.model.dto.ActivateDTO
@@ -80,6 +88,8 @@ import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.CommonCodeViewModel
 import com.app.presentation.viewmodel.SensorManagerViewModel
 import com.app.presentation.viewmodel.StateViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -1049,10 +1059,19 @@ fun ShowdownDialog(
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SweatDialog(
     onDismiss: () -> Unit
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
+    val permissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
+
+    LaunchedEffect(Unit) {
+        permissionState.launchPermissionRequest()
+    }
+
     Dialog(
         onDismissRequest = onDismiss
     ) {
@@ -1078,6 +1097,35 @@ fun SweatDialog(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                 )
+
+                AndroidView(factory = { it ->
+                    val previewView = PreviewView(it)
+                    val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+
+                    cameraProviderFuture.addListener({
+                        val cameraProvider = cameraProviderFuture.get()
+
+                        val preview = Preview.Builder().build().also {
+                            it.surfaceProvider = previewView.surfaceProvider
+                        }
+
+                        val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+
+                        try {
+                            cameraProvider.unbindAll()
+                            cameraProvider.bindToLifecycle(
+                                lifecycleOwner,
+                                cameraSelector,
+                                preview
+                            )
+                        } catch (e: Exception) {
+                            Log.e("CameraX", "Use case binding failed", e)
+                        }
+
+                    }, ContextCompat.getMainExecutor(context))
+
+                    previewView
+                }, modifier = Modifier.fillMaxSize())
             }
         }
     }

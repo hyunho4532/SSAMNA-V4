@@ -53,6 +53,7 @@ dependencies {
     /**
      * gitHub Open Source
      */
+    implementation(libs.guava)
     implementation(libs.animated.nav.bar)
     implementation(libs.dotenv.kotlin)
     implementation(libs.identity.googleid)
@@ -83,6 +84,10 @@ dependencies {
     /**
      * androidx
      */
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
     implementation(libs.androidx.browser)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.graphics.shapes)
