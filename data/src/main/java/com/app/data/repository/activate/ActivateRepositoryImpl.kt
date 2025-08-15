@@ -65,9 +65,13 @@ class ActivateRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun selectActivityAll(): List<ActivateDTO> {
+    override suspend fun selectActivityAll(userId: String): List<ActivateDTO> {
         return withContext(Dispatchers.IO) {
-            postgrest.from("Activate").select().decodeList()
+            postgrest.from("Activate").select {
+                filter {
+                    eq("user_id", userId)
+                }
+            }.decodeList()
         }
     }
 }

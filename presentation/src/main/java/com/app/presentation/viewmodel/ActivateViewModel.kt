@@ -10,7 +10,7 @@ import javax.inject.Inject
 class ActivateViewModel @Inject constructor(
     private val activateCase: ActivateCase
 ): ViewModel() {
-    suspend fun select(): List<ActivateDTO> {
-        return activateCase.selectActivityAll()
+    suspend fun select(userId: String): List<ActivateDTO> {
+        return activateCase.selectActivityAll(userId)
     }
 }

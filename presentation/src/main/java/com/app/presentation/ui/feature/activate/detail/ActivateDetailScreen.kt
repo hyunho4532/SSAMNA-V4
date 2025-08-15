@@ -36,6 +36,7 @@ import com.app.presentation.component.tool.chartDetailCard
 import com.app.presentation.component.util.analyzeRunningFeedback
 import com.app.presentation.component.util.responsive.setUpWidth
 import com.app.domain.model.enum.ButtonType
+import com.app.presentation.component.tool.sweatDetailCard
 import com.app.presentation.ui.feature.analyze.FastRunning
 import com.app.presentation.ui.feature.analyze.ModerateRunning
 import com.app.presentation.ui.feature.analyze.OptimalRunning
@@ -134,7 +135,42 @@ fun ActivateDetailScreen(
                 height = 60.dp
             )
 
-            Spacer(width = 0.dp, height = 40.dp)
+            /**
+             * 차트 상세 분석으로 이동하기 위한 카드 UI
+             */
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp)
+                    .align(Alignment.Start)
+                    .padding(
+                        top = 40.dp,
+                        start = 24.dp
+                    )
+            ) {
+                Column {
+                    Text(
+                        text = "땀 분석",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+
+                    Spacer(
+                        width = setUpWidth(),
+                        height = 10.dp,
+                        isBottomBorder = true
+                    )
+
+                    Box(
+                        modifier = Modifier.padding(top = 12.dp)
+                    ) {
+                        sweatDetailCard(
+                            height = 50.dp,
+                            navController = navController
+                        )
+                    }
+                }
+            }
 
             /**
              * 차트 상세 분석으로 이동하기 위한 카드 UI
@@ -173,7 +209,6 @@ fun ActivateDetailScreen(
                     }
                 }
             }
-
 
             Box(
                 modifier = Modifier

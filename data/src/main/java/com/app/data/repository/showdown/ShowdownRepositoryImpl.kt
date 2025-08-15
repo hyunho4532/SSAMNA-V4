@@ -1,5 +1,6 @@
 package com.app.data.repository.showdown
 
+import android.util.Log
 import com.app.domain.model.calcul.FormatImpl
 import com.app.domain.model.dto.ShowdownDTO
 import com.app.domain.model.dto.ShowdownInviteDTO
@@ -66,6 +67,18 @@ class ShowdownRepositoryImpl @Inject constructor(
             postgrest.from("Showdown").insert(showdownDTO)
 
             onSuccess(true)
+        }
+    }
+
+    override suspend fun showdownDelete(showdownDTO: ShowdownDTO) {
+        Log.d("ShowdownRepositoryImpl", showdownDTO.id.toString())
+
+        return withContext(Dispatchers.IO) {
+            postgrest.from("Showdown").delete {
+                filter {
+                    eq("id", showdownDTO.id)
+                }
+            }
         }
     }
 }

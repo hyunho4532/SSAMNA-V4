@@ -8,4 +8,5 @@ interface ShowdownRepository {
     suspend fun select(userId: String) : List<ShowdownInviteDTO>
     suspend fun showdownSelect(userId: String) : List<ShowdownDTO>
     suspend fun delete(showdownInviteDTO: ShowdownInviteDTO, user: String, other: String, onSuccess: (Boolean) -> Unit)
+    suspend fun showdownDelete(showdownDTO: ShowdownDTO)
 }

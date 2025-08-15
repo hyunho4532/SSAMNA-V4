@@ -358,7 +358,7 @@ fun ProfileScreen(
                     calculatorActivateCardWeight(
                         data = activateData,
                         minHeight = 160,
-                        maxHeight = 320
+                        maxHeight = 340
                     )
                 )
                 .verticalScroll(rememberScrollState())
@@ -566,7 +566,7 @@ fun ProfileScreen(
                     calculatorActivateCardWeight(
                         data = challengeData,
                         minHeight = 80,
-                        maxHeight = 160
+                        maxHeight = 180
                     )
                 )
                 .verticalScroll(rememberScrollState())

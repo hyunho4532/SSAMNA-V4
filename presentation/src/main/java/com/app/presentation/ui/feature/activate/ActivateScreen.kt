@@ -39,6 +39,7 @@ import com.app.presentation.component.marker.MapMarker
 import com.app.presentation.component.util.responsive.setUpWidth
 import com.app.presentation.viewmodel.ActivateViewModel
 import com.app.presentation.viewmodel.StateViewModel
+import com.app.presentation.viewmodel.UserViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
@@ -57,17 +58,20 @@ import kotlinx.serialization.json.jsonPrimitive
 @Composable
 fun ActivateScreen(
     @ApplicationContext context: Context,
-    activateViewModel: ActivateViewModel = hiltViewModel(),
     navController: NavController,
     stateViewModel: StateViewModel,
+    activateViewModel: ActivateViewModel = hiltViewModel(),
+    userViewModel: UserViewModel = hiltViewModel()
 ) {
     val activateList = remember {
         mutableStateListOf<ActivateDTO>()
     }
+
+    val userId = userViewModel.getSavedLoginState()
     
     LaunchedEffect(key1 = Unit) {
         if (activateList.isEmpty()) {
-            val activates = activateViewModel.select()
+            val activates = activateViewModel.select(userId)
             activateList.addAll(activates)
         }
     }

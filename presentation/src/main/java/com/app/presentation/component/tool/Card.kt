@@ -28,7 +28,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
@@ -38,6 +40,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -84,6 +87,7 @@ import com.app.presentation.component.util.responsive.setUpWidth
 import com.app.domain.model.enum.CardType
 import com.app.domain.model.state.ChallengeMaster
 import com.app.domain.model.user.UserDTO
+import com.app.presentation.component.dialog.SweatDialog
 import com.app.presentation.viewmodel.ActivityLocationViewModel
 import com.app.presentation.viewmodel.JsonParseViewModel
 import com.app.presentation.viewmodel.ShowdownViewModel
@@ -309,7 +313,7 @@ fun activateCard(
                     navController.navigate("activateDetail/${activateDTO!!.id}")
                 }
             },
-        border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onSurface)
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         if (cardType == CardType.ActivateStatus.Running) {
             Row {
@@ -617,7 +621,7 @@ fun challengeRegistrationCard(
             ) {
                 onChallengeIsPopup(true)
             },
-        border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onSurface)
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Box(
             modifier = Modifier
@@ -749,6 +753,72 @@ fun activateHistoryCard(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
+            }
+        }
+    }
+}
+
+/**
+ * 땀 분석 카드
+ */
+@Composable
+fun sweatDetailCard(
+    height: Dp,
+    navController: NavController = rememberNavController()
+) {
+    // 다이얼로그 표시 여부 상태
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        SweatDialog {
+            showDialog = false
+        }
+    }
+
+    Card (
+        modifier = Modifier
+            .width(setUpWidth())
+            .height(height)
+            .clickable(
+                interactionSource = remember {
+                    MutableInteractionSource()
+                },
+                indication = rememberRipple(
+                    color = Color.Gray,
+                    bounded = true
+                )
+            ) {
+                showDialog = true
+            },
+        border = BorderStroke(1.dp, Color.Gray)
+    ) {
+        Row (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_water_drop_24),
+                contentDescription = "그래프 로고",
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+
+            Column {
+                Text(
+                    modifier = Modifier.padding(start = 6.dp),
+                    text = "땀 분석하기. (런닝 후 현재 내 상태는?)",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Text(
+                    modifier = Modifier.padding(start = 6.dp),
+                    text = "땀 측정",
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             }
         }
     }
@@ -1048,7 +1118,7 @@ fun showdownSelectCard(
             ) {
 
             },
-        border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onSurface)
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column {
             Row(
@@ -1140,6 +1210,7 @@ fun showdownSelectCard(
                     ) {
                         CustomButton(
                             type = ButtonType.ShowdownStatus.DELETE,
+                            data = data,
                             width = setUpWidth(),
                             height = 32.dp,
                             text = "확인! (삭제)",
@@ -1159,6 +1230,7 @@ fun showdownSelectCard(
                     ) {
                         CustomButton(
                             type = ButtonType.ShowdownStatus.DELETE,
+                            data = data,
                             width = setUpWidth(),
                             height = 32.dp,
                             text = "확인! (삭제)",

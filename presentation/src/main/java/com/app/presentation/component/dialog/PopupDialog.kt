@@ -1048,3 +1048,37 @@ fun ShowdownDialog(
         }
     }
 }
+
+@Composable
+fun SweatDialog(
+    onDismiss: () -> Unit
+) {
+    Dialog(
+        onDismissRequest = onDismiss
+    ) {
+        Card(
+            modifier = Modifier
+                .width(420.dp)
+                .height(200.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White
+            )
+        ) {
+            Column (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        top = 14.dp,
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "땀 분석",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+        }
+    }
+}

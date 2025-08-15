@@ -10,5 +10,5 @@ interface ActivateRepository {
     suspend fun selectActivateByGoogleId(googleId: String) : List<ActivateDTO>
     suspend fun selectActivateByDate(googleId: String, date: String) : List<ActivateDTO>
     suspend fun selectActivityFindById(id: Int) : List<ActivateDTO>
-    suspend fun selectActivityAll() : List<ActivateDTO>
+    suspend fun selectActivityAll(userId: String): List<ActivateDTO>
 }

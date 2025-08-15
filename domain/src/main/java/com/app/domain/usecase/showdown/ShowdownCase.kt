@@ -25,4 +25,8 @@ class ShowdownCase @Inject constructor(
             onSuccess(it)
         }
     }
+
+    suspend fun showdownDelete(showdownDTO: ShowdownDTO) {
+        showdownRepository.showdownDelete(showdownDTO)
+    }
 }

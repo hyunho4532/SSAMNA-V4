@@ -33,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.domain.model.calcul.FormatImpl
 import com.app.domain.model.dto.ActivateDTO
 import com.app.domain.model.dto.ChallengeDTO
+import com.app.domain.model.dto.ShowdownDTO
 import com.app.domain.model.location.Coordinate
 import com.app.domain.model.state.ChallengeSub
 import com.app.presentation.R
@@ -147,7 +148,12 @@ fun CustomButton(
                             dataIntent(true, data!!)
                         }
                         ButtonType.ShowdownStatus.DELETE -> {
-                            onClick(true)
+                            showdownViewModel.showdownDelete(data as ShowdownDTO)
+
+                            val intent = Intent(context, HomeActivity::class.java)
+                            context.startActivity(intent)
+
+                            Toast.makeText(context, "대결이 정상적으로 종료되었습니다!", Toast.LENGTH_SHORT).show()
                         }
                         ButtonType.ShowdownStatus.INSERT -> {
                             showdownViewModel.insert(

@@ -70,4 +70,12 @@ class ShowdownViewModel @Inject constructor(
             }
         }
     }
+
+    fun showdownDelete(
+        showdownDTO: ShowdownDTO
+    ) {
+        viewModelScope.launch {
+            showdownCase.showdownDelete(showdownDTO)
+        }
+    }
 }
